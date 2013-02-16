@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E3D75626-B32B-47D4-A58B-64EE3EB0082F}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>The203.CollectionJson.Core</RootNamespace>
+    <AssemblyName>The203.CollectionJson.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CollectionJsonLinker.cs" />
+    <Compile Include="CJ.cs" />
+    <Compile Include="IRouteMapping.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="HideFromClientAttribute.cs" />
+    <Compile Include="ICJ.cs" />
+    <Compile Include="Links\CollectionLinkBuilderCollection.cs" />
+    <Compile Include="Model\CJException.cs" />
+    <Compile Include="Model\Error.cs" />
+    <Compile Include="Model\KeyListPair.cs" />
+    <Compile Include="Model\PluralValueDictionary.cs" />
+    <Compile Include="PropertyNotFoundHydrationException.cs" />
+    <Compile Include="Links\CollectionLinkBuilderItem.cs" />
+    <Compile Include="ICJResult.cs" />
+    <Compile Include="Links\ILinkBuilderItem.cs" />
+    <Compile Include="Links\ItemLinkBuilderItem.cs" />
+    <Compile Include="Links\LinkBuilderUrlType.cs" />
+    <Compile Include="Links\LinkBuilderItem.cs" />
+    <Compile Include="Model\Data.cs" />
+    <Compile Include="DomainResolver.cs" />
+    <Compile Include="Model\Item.cs" />
+    <Compile Include="Model\Link.cs" />
+    <Compile Include="CollectionMapping.cs" />
+    <Compile Include="Links\LinkBuilder.cs" />
+    <Compile Include="Model\CollectionContainer.cs" />
+    <Compile Include="Model\CollectionJsonCollection.cs" />
+    <Compile Include="Model\Template.cs" />
+    <Compile Include="Model\TemplateContainer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="CollectionJsonTemplating.cs" />
+    <Compile Include="Links\SimpleLinkBuilderItem.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
