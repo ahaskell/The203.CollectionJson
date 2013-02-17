@@ -5,7 +5,7 @@ The203.CollectionJson framework provides a way to marshell your Domain model int
 
 #Getting Started
 
-CJ framework has 2 basic parts. Route creation and the  Collectio Json Controller. The CJ Controller itself then has multiple aspects like link creation, the collection json result, and template hydration. Let's get started with Route creation.
+CJ framework has 2 basic parts. Route creation and the  Collection Json Controller. The CJ Controller itself then has multiple aspects like link creation, the collection json result, and template hydration. Let's get started with Route creation.
 
 ##Route Creation
 
@@ -23,14 +23,14 @@ cjLinker.StartAlternateRoute()
      .MapRoutes(routes);
 ````
  
- The root collection is a Deck of cards. If a client issues a request to http://the203.com/Decks MVC will load a DecksController and run the "Collection" action. CJ does not dictate which or how an application support different HTTP verbs. Generally an application is best served supplying a meaningful name for the method and using custom attributes to denate the Action name and the HTTP verb supported. The expectation is a collection of Decks will be returned if a GET request is issued to /Decks. If a client issues a GET request to http://the203.com/Decks/123 the DecksController is loaded and the action name Item is executed. 
+ The root collection is a Deck of cards. If a client issues a request to http://the203.info/Decks MVC will load a DecksController and run the "Collection" action. CJ does not dictate which or how an application support different HTTP verbs. Generally an application is best served supplying a meaningful name for the method and using custom attributes to denote the Action name and the HTTP verb supported. The expectation is a collection of Decks will be returned if a GET request is issued to /Decks. If a client issues a GET request to http://the203.info/Decks/123 the DecksController is loaded and the action name Item is executed. 
 
- The second call to AddItemAndCollection has a parent (CardDeck) and a new Collection Card. Thus these collections are now a step down on the URL. http://the203.com/Decks/123/Cards will return a collection of Cards for the Deck 123. Note that this time instead of point to an Id we send a delegate that locates off of Sequence so http://the203.com/Decks/123/Cards/3 would be expected to return the 3rd card in the deck. 
+ The second call to AddItemAndCollection has a parent (CardDeck) and a new Collection Card. Thus these collections are now a step down on the URL. http://the203.info/Decks/123/Cards will return a collection of Cards for the Deck 123. Note that this time instead of point to an Id we send a delegate that locates off of Sequence so http://the203.info/Decks/123/Cards/3 would be expected to return the 3rd card in the deck. 
 
- Embedded Items are intended to only map to a single item and generally that item is also a top level item elswhere in the system. Emebedded items are sort of a wierd beast and need to be fixed up a little and documented better, look at the tests if you want to know them more
+ Embedded Items are intended to only map to a single item and generally that item is also a top level item elsewhere in the system. Embedded items are sort of a weird beast and need to be fixed up a little and documented better, look at the tests if you want to know them more
 
 ##Collection Json Controller
-To take advantage of marshalling your domain into CJ format and a few other things your MVC controllers should extend the CollectionJsonController. Once an application's controller has extended from the CJ Controller the application can take advantage of a few things in its controllers. It can create CollectionJsonResult, mapp out the links or hydrate objects from collection json or other input. 
+To take advantage of marshaling your domain into CJ format and a few other things your MVC controllers should extend the CollectionJsonController. Once an application's controller has extended from the CJ Controller the application can take advantage of a few things in its controllers. It can create CollectionJsonResult, map out the links or hydrate objects from collection json or other input. 
 
 ###Returning CJ Formatted Data
  This follows MVCs concept of calling View only an application makes a call to CollectionJsonResult<T>  a single instance of T or an IEnumerable of T can be sent into this method. Returning the result of the method call will result in a  very simple CJ formatted object. Generally this is not enough and the application will want a links section as well. 
