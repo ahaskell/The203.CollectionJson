@@ -29,13 +29,13 @@ cjLinker.StartAlternateRoute()
 
  Embedded Items are intended to only map to a single item and generally that item is also a top level item elswhere in the system. Emebedded items are sort of a wierd beast and need to be fixed up a little and documented better, look at the tests if you want to know them more
 
- ##Collection Json Controller
+##Collection Json Controller
 To take advantage of marshalling your domain into CJ format and a few other things your MVC controllers should extend the CollectionJsonController. Once an application's controller has extended from the CJ Controller the application can take advantage of a few things in its controllers. It can create CollectionJsonResult, mapp out the links or hydrate objects from collection json or other input. 
 
- ###Returning CJ Formatted Data
+###Returning CJ Formatted Data
  This follows MVCs concept of calling View only an application makes a call to CollectionJsonResult<T>  a single instance of T or an IEnumerable of T can be sent into this method. Returning the result of the method call will result in a  very simple CJ formatted object. Generally this is not enough and the application will want a links section as well. 
 
- ###Link Creation
+###Link Creation
  Right now link creation is required in each CJResult creation. I'm not a big fan of this and thanks to some work that has been done inside the link creation I think this might change in the future. For now this is how it works. 
 
 The links section is created by calling BuildLinks on the CJResult. This provides a sort of fluent API to build out the links section of the CJ return. The link builder will detect items that do not exist and only provide links to those items that actually exist. This makes building links much more elegant by not requiring a liteny of if statements breaking up the fluent api calls. Most methods have an Always varient (or should) that denote a link should be created even if the acessor returns a nothing. Consider this code block: 
