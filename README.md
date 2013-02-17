@@ -36,7 +36,7 @@ To take advantage of marshalling your domain into CJ format and a few other thin
  ### Returning CJ Formatted Data ###
  This follows MVCs concept of calling View only an application makes a call to CollectionJsonResult<T>  a single instance of T or an IEnumerable of T can be sent into this method. Returning the result of the method call will result in a  very simple CJ formatted object. Generally this is not enough and the application will want a links section as well. 
 
- ## Link Creation ##
+ ### Link Creation ###
  Right now link creation is required in each CJResult creation. I'm not a big fan of this and thanks to some work that has been done inside the link creation I think this might change in the future. For now this is how it works. 
 
 The links section is created by calling BuildLinks on the CJResult. This provides a sort of fluent API to build out the links section of the CJ return. The link builder will detect items that do not exist and only provide links to those items that actually exist. This makes building links much more elegant by not requiring a liteny of if statements breaking up the fluent api calls. Most methods have an Always varient (or should) that denote a link should be created even if the acessor returns a nothing. Consider this code block: 
@@ -50,7 +50,7 @@ cjr.BuildLinks()
 
 The CardDeck is the root collection so IsParent is called to denote, there is no need to crawl an object graph somewhere to find the root collection. AddChildCollection will add the Cards link to the Link section and the link builder will check deck.Cards to ensure it is a valid link for the Deck object. The Deck also has Players and those players' profiles might be available at another defined root element (which why it is a RelativeGroup). 
 
-#Template Hydration#
+###Template Hydration###
 
 Again template hydration tries to follow along with MVC on hydrating an object. Template Hydration takes a Template object which can be a domain object -or- simplified object and it will hydrate the object based off the body with CJ formatted JSON, it will also hydrate based off forms and querystring. This allows an application to consistently rely on CJs Hydration system regardless of input techniques (templates or queries for example). Template hydration is CORS compliant as well and does deal with IE 8 and IE 9's shortcomings with CORS and POSTs. 
 
