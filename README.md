@@ -1,13 +1,13 @@
-# The203.CollectionJson
+#The203.CollectionJson
 
 The203.CollectionJson framework provides a way to marshell your Domain model into Collection+JSON formated endpoints. The framework is young, and comes from a product that did not have other mime types, as a result it is not real strict when it comes to request types and returning CJ. CJ works with ASP MVC to create a set of endpoints that return CJ formated data. The CJ framework seeks to make mapping an application's domain to CJ spec endpoint painless and allows the application to focus on the business functions and not implementing a spec.
 
 
-# Getting Started #
+#Getting Started
 
 CJ framework has 2 basic parts. Route creation and the  Collectio Json Controller. The CJ Controller itself then has multiple aspects like link creation, the collection json result, and template hydration. Let's get started with Route creation.
 
-## Route Creation ##
+##Route Creation
 
 Route creation generally would go into the Global.asax. Route creation is required for link creation to work. Route creation is a fluent API to define the relationships of the different domains in an application. A domain is mapped as a set of Items and Collections and once the mapping is complete MapRoutes is called. MapRoutes saves off the routes in memory and also registers the routes with MVC's router. Items' routes are mapped to an Action Name of Item, collections' an Action Name of Collection.  Consider the following code:
 
@@ -29,14 +29,13 @@ cjLinker.StartAlternateRoute()
 
  Embedded Items are intended to only map to a single item and generally that item is also a top level item elswhere in the system. Emebedded items are sort of a wierd beast and need to be fixed up a little and documented better, look at the tests if you want to know them more :)
 
- ## Collection Json Controller ##
-
+ ##Collection Json Controller
 To take advantage of marshalling your domain into CJ format and a few other things your MVC controllers should extend the CollectionJsonController. Once an application's controller has extended from the CJ Controller the application can take advantage of a few things in its controllers. It can create CollectionJsonResult, mapp out the links or hydrate objects from collection json or other input. 
 
- ### Returning CJ Formatted Data ###
+ ###Returning CJ Formatted Data
  This follows MVCs concept of calling View only an application makes a call to CollectionJsonResult<T>  a single instance of T or an IEnumerable of T can be sent into this method. Returning the result of the method call will result in a  very simple CJ formatted object. Generally this is not enough and the application will want a links section as well. 
 
- ### Link Creation ###
+ ###Link Creation
  Right now link creation is required in each CJResult creation. I'm not a big fan of this and thanks to some work that has been done inside the link creation I think this might change in the future. For now this is how it works. 
 
 The links section is created by calling BuildLinks on the CJResult. This provides a sort of fluent API to build out the links section of the CJ return. The link builder will detect items that do not exist and only provide links to those items that actually exist. This makes building links much more elegant by not requiring a liteny of if statements breaking up the fluent api calls. Most methods have an Always varient (or should) that denote a link should be created even if the acessor returns a nothing. Consider this code block: 
@@ -50,7 +49,7 @@ cjr.BuildLinks()
 
 The CardDeck is the root collection so IsParent is called to denote, there is no need to crawl an object graph somewhere to find the root collection. AddChildCollection will add the Cards link to the Link section and the link builder will check deck.Cards to ensure it is a valid link for the Deck object. The Deck also has Players and those players' profiles might be available at another defined root element (which why it is a RelativeGroup). 
 
-###Template Hydration###
+###Template Hydration
 
 Again template hydration tries to follow along with MVC on hydrating an object. Template Hydration takes a Template object which can be a domain object -or- simplified object and it will hydrate the object based off the body with CJ formatted JSON, it will also hydrate based off forms and querystring. This allows an application to consistently rely on CJs Hydration system regardless of input techniques (templates or queries for example). Template hydration is CORS compliant as well and does deal with IE 8 and IE 9's shortcomings with CORS and POSTs. 
 
