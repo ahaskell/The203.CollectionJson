@@ -27,7 +27,7 @@ cjLinker.StartAlternateRoute()
 
  The second call to AddItemAndCollection has a parent (CardDeck) and a new Collection Card. Thus these collections are now a step down on the URL. http://the203.com/Decks/123/Cards will return a collection of Cards for the Deck 123. Note that this time instead of point to an Id we send a delegate that locates off of Sequence so http://the203.com/Decks/123/Cards/3 would be expected to return the 3rd card in the deck. 
 
- Embedded Items are intended to only map to a single item and generally that item is also a top level item elswhere in the system. Emebedded items are sort of a wierd beast and need to be fixed up a little and documented better, look at the tests if you want to know them more :)
+ Embedded Items are intended to only map to a single item and generally that item is also a top level item elswhere in the system. Emebedded items are sort of a wierd beast and need to be fixed up a little and documented better, look at the tests if you want to know them more
 
  ##Collection Json Controller
 To take advantage of marshalling your domain into CJ format and a few other things your MVC controllers should extend the CollectionJsonController. Once an application's controller has extended from the CJ Controller the application can take advantage of a few things in its controllers. It can create CollectionJsonResult, mapp out the links or hydrate objects from collection json or other input. 
