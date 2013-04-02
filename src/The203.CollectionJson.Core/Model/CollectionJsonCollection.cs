@@ -5,17 +5,17 @@ using System.Text;
 
 namespace The203.CollectionJson.Core.Model
 {
-    public class CollectionJsonCollection
+    public class CollectionJsonCollection : ICollectionJsonCollection
     {
         public String href { get; set; }
-        public IList<Link> links {get; private set;}
-        public IList<Item> items { get; private set; }
-        public Template template { get; set;}
-	   public Error error { get; set; }
+        public IList<ILink> links {get; private set;}
+        public IList<IItem> items { get; private set; }
+        public ITemplate template { get; set;}
+	   public IError error { get; set; }
         public CollectionJsonCollection()
         {
-            this.links = new List<Link>();
-            this.items = new List<Item>();
+            this.links = new List<ILink>();
+            this.items = new List<IItem>();
         }
     }
 }

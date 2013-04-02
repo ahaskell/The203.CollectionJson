@@ -10,6 +10,6 @@ namespace The203.CollectionJson.Core.Links
     public interface ILinkBuilderItem<TItem>
     {
 	    Type LinkFor { get; }
-	    void Resolve(TItem baseObject, IDictionary<LinkBuilderUrlType, string> urlMap, IDictionary<Type, IRouteMapping> mappings, IList<Link> links );
+	    void Resolve(TItem baseObject, IDictionary<LinkBuilderUrlType, string> urlMap, IDictionary<Type, IRouteMapping> mappings, IList<ILink> links );
     }
 }

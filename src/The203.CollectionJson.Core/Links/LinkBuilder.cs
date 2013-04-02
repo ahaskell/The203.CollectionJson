@@ -17,14 +17,14 @@ namespace The203.CollectionJson.Core.Links
     /// <value>
     /// 
     /// </value>
-    public class LinkBuilder<TAnchor>
+    public class LinkBuilder<TAnchor> : ILinkBuilder<TAnchor>
     {
 	   private readonly IDictionary<Type, IRouteMapping> mappings;
 	   private readonly PluralValueDictionary<Type, IRouteMapping> alternateMappings;
 	   private readonly IDictionary<LinkBuilderUrlType, String> baseUrls;
 	   private readonly IList<ILinkBuilderItem<TAnchor>> linkBuilders;
 	   private ILinkBuilderItem<TAnchor> parent;
-	   private Link parentLink;
+	   private ILink parentLink;
 
 	   public LinkBuilder(IDictionary<Type, IRouteMapping> mappingData)
 	   {
@@ -45,68 +45,68 @@ namespace The203.CollectionJson.Core.Links
 	   }
 
 
-	   public LinkBuilder<TAnchor> IsParent()
+	   public ILinkBuilder<TAnchor> IsParent()
 	   {
 		  this.parentLink = new Link("", "");
 		  this.baseUrls[LinkBuilderUrlType.Parent] = this.baseUrls[LinkBuilderUrlType.Prepend];
 		  return this;
 	   }
 
-	   public LinkBuilder<TAnchor> AddParent<TParent>(String rel, Func<TAnchor, TParent> getParent)
+	   public ILinkBuilder<TAnchor> AddParent<TParent>(String rel, Func<TAnchor, TParent> getParent)
 	   {
 		  this.parent = new ItemLinkBuilderItem<TAnchor, TParent>(rel, getParent, LinkBuilderUrlType.Prepend);
 		  return this;
 	   }
 
-	   public LinkBuilder<TAnchor> AddParent<TParent>(String rel, TParent theParent)
+	   public ILinkBuilder<TAnchor> AddParent<TParent>(String rel, TParent theParent)
 	   {
 		  this.parent = new ItemLinkBuilderItem<TAnchor, TParent>(rel, useless => theParent, LinkBuilderUrlType.Prepend);
 		  return this;
 	   }
 
-	   public LinkBuilder<TAnchor> AddParent<TParent>(String rel, String theId)
+	   public ILinkBuilder<TAnchor> AddParent<TParent>(String rel, String theId)
 	   {
 		  this.parent = new SimpleLinkBuilderItem<TAnchor, TParent>(rel, theId, LinkBuilderUrlType.Prepend);
 		  return this;
 	   }
 
-	   public LinkBuilder<TAnchor> AddChildCollection<TChild>(string rel, Func<TAnchor, IEnumerable<TChild>> getChildren)
+	   public ILinkBuilder<TAnchor> AddChildCollection<TChild>(string rel, Func<TAnchor, IEnumerable<TChild>> getChildren)
 	   {
 		  this.linkBuilders.Add(new CollectionLinkBuilderItem<TAnchor, TChild>(rel, getChildren, LinkBuilderUrlType.OriginalItem));
 		  return this;
 	   }
 
-	   public LinkBuilder<TAnchor> AddChild<TChild>(string rel, Func<TAnchor, TChild> getChild)
+	   public ILinkBuilder<TAnchor> AddChild<TChild>(string rel, Func<TAnchor, TChild> getChild)
 	   {
 		  this.linkBuilders.Add(new ItemLinkBuilderItem<TAnchor, TChild>(rel, getChild, LinkBuilderUrlType.OriginalItem));
 		  return this;
 	   }
-	   public LinkBuilder<TAnchor> AddChildAlways<TChild>(string rel, Func<TAnchor, TChild> getChild)
+	   public ILinkBuilder<TAnchor> AddChildAlways<TChild>(string rel, Func<TAnchor, TChild> getChild)
 	   {
 		  this.linkBuilders.Add(new ItemLinkBuilderItem<TAnchor, TChild>(rel, getChild, LinkBuilderUrlType.OriginalItem).Always());
 		  return this;
 	   }
 
-	   public LinkBuilder<TAnchor> AddSibling<TSibling>(string rel, TSibling sibling)
+	   public ILinkBuilder<TAnchor> AddSibling<TSibling>(string rel, TSibling sibling)
 	   {
 		  this.linkBuilders.Add(new ItemLinkBuilderItem<TAnchor, TSibling>(rel, thing => sibling, LinkBuilderUrlType.Parent));
 		  return this;
 	   }
 
-	   public LinkBuilder<TAnchor> AddSibling<TSibling>(string rel, string siblingId)
+	   public ILinkBuilder<TAnchor> AddSibling<TSibling>(string rel, string siblingId)
 	   {
 		  this.linkBuilders.Add(new SimpleLinkBuilderItem<TAnchor, TSibling>(rel, siblingId, LinkBuilderUrlType.Parent));
 		  return this;
 	   }
 
-	   public LinkBuilder<TAnchor> AddSibling<TSibling>(String rel, Func<TAnchor, TSibling> getSibling)
+	   public ILinkBuilder<TAnchor> AddSibling<TSibling>(String rel, Func<TAnchor, TSibling> getSibling)
 	   {
 		  this.linkBuilders.Add(new ItemLinkBuilderItem<TAnchor, TSibling>(rel, getSibling, LinkBuilderUrlType.Parent));
 		  return this;
 	   }
 
 
-	   public LinkBuilder<TAnchor> AddRelativeLink<TLinkRelativeTo>(string rel, Func<TAnchor, TLinkRelativeTo> getRelatedObject, String tackOnUrl)
+	   public ILinkBuilder<TAnchor> AddRelativeLink<TLinkRelativeTo>(string rel, Func<TAnchor, TLinkRelativeTo> getRelatedObject, String tackOnUrl)
 	   {
 		  LinkBuilderUrlType type = LinkBuilderUrlType.OriginalItem;
 		  if (typeof(TLinkRelativeTo) == typeof(TAnchor))
@@ -116,8 +116,13 @@ namespace The203.CollectionJson.Core.Links
 		  this.linkBuilders.Add(new ItemLinkBuilderItem<TAnchor, TLinkRelativeTo>(rel, getRelatedObject, type, tackOnUrl));
 		  return this;
 	   }
+	   public ILinkBuilder<TAnchor> AddAbsoluteLink(string rel, Func<TAnchor, string> resolveUrl)
+	   {
+		  this.linkBuilders.Add(new AbsoluteLinkBuilderItem<TAnchor>(rel, resolveUrl));
+		  return this;
+	   }
 
-	   public LinkBuilder<TAnchor> AddRelativeGroup<TLinkRelativeTo, TGroupType>(Func<TGroupType, String> relationResolver, Func<TAnchor, IEnumerable<TGroupType>> getRelatedGroup, Func<TGroupType, String> resolveItemId, String tackOnUrl)
+	   public ILinkBuilder<TAnchor> AddRelativeGroup<TLinkRelativeTo, TGroupType>(Func<TGroupType, String> relationResolver, Func<TAnchor, IEnumerable<TGroupType>> getRelatedGroup, Func<TGroupType, String> resolveItemId, String tackOnUrl)
 	   {
 		  LinkBuilderUrlType type = LinkBuilderUrlType.OriginalItem;
 		  if (typeof(TLinkRelativeTo) == typeof(TAnchor))
@@ -132,7 +137,7 @@ namespace The203.CollectionJson.Core.Links
 		  return this;
 	   }
 
-	   public void PopulateLinks(TAnchor source, IList<Link> targetLinks)
+	   public void PopulateLinks(TAnchor source, IList<ILink> targetLinks)
 	   {
 		  ResolveParent(source);
 		  targetLinks.Add(this.parentLink);
@@ -152,14 +157,14 @@ namespace The203.CollectionJson.Core.Links
 			 {
 				throw new ApplicationException("Cannot resolve top-level URL.  Call IsParent or AddParent.");
 			 }
-			 IList<Link> parentLinkList = new List<Link>();
+			 IList<ILink> parentLinkList = new List<ILink>();
 			 this.parent.Resolve(source, this.baseUrls, this.mappings, parentLinkList);
 			 this.parentLink = parentLinkList[0];
 			 this.baseUrls[LinkBuilderUrlType.Parent] = this.parentLink.href;
 		  }
 	   }
 
-	   public string GetSelf(TAnchor source)
+	   internal string GetSelf(TAnchor source)
 	   {
 		  ResolveParent(source);
 
@@ -170,18 +175,18 @@ namespace The203.CollectionJson.Core.Links
 		  {
 			 self.Always();
 		  }
-		  IList<Link> selfLinkList = new List<Link>();
+		  IList<ILink> selfLinkList = new List<ILink>();
 		   self.Resolve(source, this.baseUrls, this.mappings, selfLinkList);
 		  return selfLinkList[0].href;
 	   }
 
-	   public LinkBuilder<TAnchor> PrependToUrl(string urlPart)
+	   public ILinkBuilder<TAnchor> PrependToUrl(string urlPart)
 	   {
 		  this.baseUrls[LinkBuilderUrlType.Prepend] = urlPart;
 		  return this;
 	   }
 
-	   public LinkBuilder<TAnchor> TryToCalculatePrependUrl(string url)
+	   public ILinkBuilder<TAnchor> TryToCalculatePrependUrl(string url)
 	   {
 		  if (mappings.ContainsKey(typeof(TAnchor)) && mappings.ContainsKey(mappings[typeof(TAnchor)].Parent))
 		  {
@@ -190,7 +195,7 @@ namespace The203.CollectionJson.Core.Links
 		  return PrependToUrl(url);
 	   }
 
-	   public LinkBuilder<TAnchor> CalculatePrependUrl(string url)
+	   public ILinkBuilder<TAnchor> CalculatePrependUrl(string url)
 	   {//This method will throw errors if it can not find a parent, but it won't hide odd bugs...use at own risk
 		  String parentRouteTemplate = mappings[mappings[typeof(TAnchor)].Parent].RouteTemplate;
 		  String searchString = parentRouteTemplate.Remove(parentRouteTemplate.IndexOf("/", StringComparison.Ordinal));

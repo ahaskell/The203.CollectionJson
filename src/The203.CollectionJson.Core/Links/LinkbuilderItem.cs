@@ -33,7 +33,7 @@ namespace The203.CollectionJson.Core.Links
 			 }
 		  }
 	   }
-	   public abstract void Resolve(TItem baseObject, IDictionary<LinkBuilderUrlType, string> urlMap, IDictionary<Type, IRouteMapping> mappings, IList<Link> links);
+	   public abstract void Resolve(TItem baseObject, IDictionary<LinkBuilderUrlType, string> urlMap, IDictionary<Type, IRouteMapping> mappings, IList<ILink> links);
 
 
 	   protected string CombinePath(string path1, string path2)

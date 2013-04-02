@@ -13,7 +13,7 @@ namespace The203.CollectionJson.Test
         [TestMethod]
         public void EnsureLinkBuilderItemFollowDirectionsForTheUrlToUse()
         {
-            List<Link> linkList = new List<Link>();
+            List<ILink> linkList = new List<ILink>();
             room1.RoomDimension = new RoomDimension() {AnswerId = "567", Confidence = 10, Score = 0};
             ILinkBuilderItem<Room> itemLinkBuilder = new ItemLinkBuilderItem<Room, RoomDimension>("test",
                                                                                                   ai => ai.RoomDimension,
@@ -34,7 +34,7 @@ namespace The203.CollectionJson.Test
         [TestMethod]
         public void EnsureLinkBuilderItemFollowDirectionsHandlesNoneDifferently()
         {
-            List<Link> linkList = new List<Link>();
+            List<ILink> linkList = new List<ILink>();
             room1.RoomDimension = new RoomDimension() {AnswerId = "567", Confidence = 10, Score = 0};
             ILinkBuilderItem<Room> itemLinkBuilder = new ItemLinkBuilderItem<Room, RoomDimension>("test",
                                                                                                   ai => ai.RoomDimension,
@@ -58,7 +58,7 @@ namespace The203.CollectionJson.Test
         // Technically the default implementation sets up blank values for each key so this edge case shouldn't ever happen even in test code. 
         public void EnsureLinkBuilderItemThrowsAppropriateErrorWhenAKeyIsMissing()
         {
-            List<Link> linkList = new List<Link>();
+            List<ILink> linkList = new List<ILink>();
             room1.RoomDimension = new RoomDimension() {AnswerId = "567", Confidence = 10, Score = 0};
             ILinkBuilderItem<Room> itemLinkBuilder = new ItemLinkBuilderItem<Room, RoomDimension>( //NOTE Parent is not setup below...hence error
                 "test", ai => ai.RoomDimension, LinkBuilderUrlType.Parent);
@@ -74,7 +74,7 @@ namespace The203.CollectionJson.Test
         [TestMethod]
         public void NullReferencesRoomDimensionInNullReturnsWhichShouldBeEquivilentToNoLinkBeingAdded()
         {
-            List<Link> linkList = new List<Link>();
+            List<ILink> linkList = new List<ILink>();
             room1.RoomDimension = null; //Just making sure it is Null for this test to work!
             ILinkBuilderItem<Room> itemLinkBuilder = new ItemLinkBuilderItem<Room, RoomDimension>("test",
                                                                                                   ai => ai.RoomDimension,
@@ -94,7 +94,7 @@ namespace The203.CollectionJson.Test
         [TestMethod]
         public void WhatShouldHappenIfMappingContainsNoReference()
         {
-            List<Link> linkList = new List<Link>();
+            List<ILink> linkList = new List<ILink>();
             room1.RoomDimension = new RoomDimension() {AnswerId = "567", Confidence = 10, Score = 0};
             defaultCollectionJsonLinker.InternalMappings.Remove(typeof (RoomDimension));
             ILinkBuilderItem<Room> itemLinkBuilder = new ItemLinkBuilderItem<Room, RoomDimension>("test",
@@ -115,7 +115,7 @@ namespace The203.CollectionJson.Test
         [TestMethod]
         public void AllowAlwaysToForceLinksToBeBuiltRegardlessOfNullValue()
         {
-            List<Link> linkList = new List<Link>();
+            List<ILink> linkList = new List<ILink>();
             room1.RoomDimension = null;
             ILinkBuilderItem<Room> itemLinkBuilder =
                 new ItemLinkBuilderItem<Room, RoomDimension>("test", ai => ai.RoomDimension, LinkBuilderUrlType.Parent).Always();

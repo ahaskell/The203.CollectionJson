@@ -14,25 +14,30 @@ namespace The203.CollectionJson.Mvc
     {
         protected virtual void HydrateModel<T>(T model) where T : class
         {
-            var reader = new System.IO.StreamReader(Request.InputStream);
-            string body = reader.ReadToEnd();
-            CollectionJsonTemplating<T> collectionTemplate = new CollectionJsonTemplating<T>();
+            var body = ExtractBody();
+	        ICollectionJsonTemplating<T> collectionTemplate = new CollectionJsonTemplating<T>();
             collectionTemplate.HydrateInstance(body, model);
         }
 
-        protected void HydrateModel<T>(T model, NameValueCollection nameValueCollection) where T : class
+	   private string ExtractBody()
+	   {
+		   var reader = new System.IO.StreamReader(Request.InputStream);
+		   string body = reader.ReadToEnd();
+		   Request.InputStream.Position = 0;
+		   return body;
+	   }
+
+	   protected void HydrateModel<T>(T model, NameValueCollection nameValueCollection) where T : class
         {
-            var reader = new System.IO.StreamReader(Request.InputStream);
-            string body = reader.ReadToEnd();
-            CollectionJsonTemplating<T> collectionTemplate = new CollectionJsonTemplating<T>();
+		  var body = ExtractBody();
+            ICollectionJsonTemplating<T> collectionTemplate = new CollectionJsonTemplating<T>();
             collectionTemplate.HydrateInstance(body, nameValueCollection, model);
         }
 
         protected virtual void HydrateModel<T>(T model, Func<IDictionary<string, string>> func)
         {
-            var reader = new System.IO.StreamReader(Request.InputStream);
-            string body = reader.ReadToEnd();
-            CollectionJsonTemplating<T> collectionTemplate = new CollectionJsonTemplating<T>();
+		  var body = ExtractBody();
+            ICollectionJsonTemplating<T> collectionTemplate = new CollectionJsonTemplating<T>();
             collectionTemplate.HydrateInstance(body, func(), model);
 
         }

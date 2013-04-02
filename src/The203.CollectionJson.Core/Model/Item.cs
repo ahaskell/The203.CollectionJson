@@ -5,17 +5,17 @@ using System.Web;
 
 namespace The203.CollectionJson.Core.Model
 {
-    public class Item
+    public class Item : IItem
     {
         public string href { get; set; }
-        public IList<Link> links{ get; private set; }
-        public IList<Data> data { get; private set; }
+        public IList<ILink> links{ get; private set; }
+        public IList<IData> data { get; private set; }
 
         public Item(string href)
         {
             this.href = href;
-            this.data = new List<Data>();
-            this.links = new List<Link>();
+            this.data = new List<IData>();
+            this.links = new List<ILink>();
         }
 
     }

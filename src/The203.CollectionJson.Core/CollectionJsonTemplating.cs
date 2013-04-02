@@ -9,7 +9,7 @@ using The203.CollectionJson.Core.Model;
 
 namespace The203.CollectionJson.Core
 {
-    public class CollectionJsonTemplating<T>
+    public class CollectionJsonTemplating<T> : ICollectionJsonTemplating<T>
     {
 	   private readonly Template template;
 
@@ -23,7 +23,7 @@ namespace The203.CollectionJson.Core
 		  this.template = new Template(templateData);
 	   }
 
-	   public Template GenerateTemplate()
+	   public ITemplate GenerateTemplate()
 	   {
 
 		  PopulateDataTemplate(template.data, typeof(T));

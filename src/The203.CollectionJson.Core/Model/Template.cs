@@ -5,7 +5,7 @@ using System.Text;
 
 namespace The203.CollectionJson.Core.Model
 {
-    public class Template
+    public class Template : ITemplate
     {   
         public Template()
         {

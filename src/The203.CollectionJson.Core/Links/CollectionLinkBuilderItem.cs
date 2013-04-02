@@ -18,7 +18,7 @@ namespace The203.CollectionJson.Core.Links
 		  this.prependUrlKey = prependUrlKey;
 	   }
 
-	   public override void Resolve(TItem baseObject, IDictionary<LinkBuilderUrlType, string> urlMap, IDictionary<Type, IRouteMapping> mappings, IList<Link> links)
+	   public override void Resolve(TItem baseObject, IDictionary<LinkBuilderUrlType, string> urlMap, IDictionary<Type, IRouteMapping> mappings, IList<ILink> links)
 	   {
 		  IEnumerable<TRelated> targetObject = resolver(baseObject);
 		  if (targetObject != null && targetObject.Count() > 0)

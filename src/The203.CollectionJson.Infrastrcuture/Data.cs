@@ -5,7 +5,7 @@ using System.Text;
 
 namespace The203.CollectionJson.Core.Model
 {
-    public class Data
+    public class Data : IData
     {
         public string name {get; set;}
         public string value { get; set; }

@@ -2,7 +2,7 @@
 
 namespace The203.CollectionJson.Core.Model
 {
-	public class Error
+	public class Error : IError
 	{
 
 	    public Error(Exception exception)

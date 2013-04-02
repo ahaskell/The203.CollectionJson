@@ -28,7 +28,7 @@ namespace The203.CollectionJson.Core.Links
             this.tackOnUrl = tackOnUrl;
         }
 
-        public override void Resolve(TItem baseObject, IDictionary<LinkBuilderUrlType, string> urlMap, IDictionary<Type, IRouteMapping> mappings, IList<Link> links )
+        public override void Resolve(TItem baseObject, IDictionary<LinkBuilderUrlType, string> urlMap, IDictionary<Type, IRouteMapping> mappings, IList<ILink> links )
         {
             TRelated targetObject = resolver(baseObject);
             if (targetObject != null || (targetObject == null && this.ignoreNullIfPossible))

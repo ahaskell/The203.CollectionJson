@@ -17,7 +17,7 @@ namespace The203.CollectionJson.Test
         {
             LinkBuilder<Room> linkBuilder = new LinkBuilder<Room>(defaultCollectionJsonLinker.InternalMappings);
             var actual = linkBuilder.AddParent<House>("House", sampleHouse);
-            IList<Link> links = new List<Link>();
+            IList<ILink> links = new List<ILink>();
             linkBuilder.PopulateLinks(room3, links);
             Assert.AreSame(linkBuilder, actual);
             var actualLink = from link in links
@@ -36,7 +36,7 @@ namespace The203.CollectionJson.Test
             room3.RoomDimension.Score = 10;
             var actual = linkBuilder.AddParent<House>("House", sampleHouse)
                                     .AddChildAlways<RoomDimension>("RoomDimension", d => d.RoomDimension);
-            var links = new List<Link>();
+            var links = new List<ILink>();
             linkBuilder.PopulateLinks(room3, links);
             Assert.AreSame(linkBuilder, actual);
             var actualLink = from link in links
@@ -56,7 +56,7 @@ namespace The203.CollectionJson.Test
             LinkBuilder<House> linkBuilder = new LinkBuilder<House>(defaultCollectionJsonLinker.InternalMappings);
             var actual = linkBuilder.IsParent()
                                     .AddChildCollection<Room>("Rooms", sg => sg.Rooms);
-            var links = new List<Link>();
+            var links = new List<ILink>();
             linkBuilder.PopulateLinks(sampleHouse, links);
             Assert.AreSame(linkBuilder, actual);
             var actualLink = from link in links
@@ -75,7 +75,7 @@ namespace The203.CollectionJson.Test
             room3.RoomDimension.Score = 10;
             var actual = linkBuilder.AddParent<House>("House", sampleHouse)
                                     .AddChildCollection<Furniture>("Furniture", d => d.Furniture);
-            var links = new List<Link>();
+            var links = new List<ILink>();
             linkBuilder.PopulateLinks(room3, links);
             Assert.AreSame(linkBuilder, actual);
             var actualLink = from link in links
@@ -100,7 +100,7 @@ namespace The203.CollectionJson.Test
             var actual = linkBuilder.AddParent<House>("House", sampleHouse)
                                     .AddSibling<Room>("Next", room2)
                                     .AddSibling<Room>("Previous", room1);
-            var links = new List<Link>();
+            var links = new List<ILink>();
             linkBuilder.PopulateLinks(room3, links);
 
             Assert.AreSame(linkBuilder, actual);
@@ -124,7 +124,7 @@ namespace The203.CollectionJson.Test
             //  CollectionJsonRoomDimension<Room> usg = new CollectionJsonRoomDimension<Room>(room1);
             LinkBuilder<Room> builder = new LinkBuilder<Room>(defaultCollectionJsonLinker.InternalMappings);
             builder.AddChild("Test", ai => ai.Furniture);
-            builder.PopulateLinks(room1, new List<Link>());
+            builder.PopulateLinks(room1, new List<ILink>());
         }
 
         [TestMethod]
@@ -149,7 +149,7 @@ namespace The203.CollectionJson.Test
             // thing that sets parent is AddParent, which we didn't call, so we can assume that
             // the parentLink has been set.  Kind of indirect and a usg of knowledge of the internals,
             // but there you are.
-            List<Link> target = new List<Link>();
+            List<ILink> target = new List<ILink>();
             builder.PopulateLinks(room1, target);
             Assert.AreEqual("", target.First().rel);
             Assert.AreEqual(1, target.Count());
@@ -164,7 +164,7 @@ namespace The203.CollectionJson.Test
             var result = builder.AddParent<Room>("Test", room3);
             Assert.AreSame(builder, result);
 
-            List<Link> targets = new List<Link>();
+            List<ILink> targets = new List<ILink>();
             builder.PopulateLinks(room3.Furniture.First(), targets);
             Assert.AreEqual("Test", targets.First().rel);
         }
@@ -178,7 +178,7 @@ namespace The203.CollectionJson.Test
             var result = builder.AddParent<Room>("Test", room3.Id);
             Assert.AreSame(builder, result);
 
-            List<Link> targets = new List<Link>();
+            List<ILink> targets = new List<ILink>();
             builder.PopulateLinks(room3.Furniture.First(), targets);
             Assert.AreEqual("Test", targets.First().rel);
             Assert.AreEqual("/Rooms/" + room3.Id, targets.First().href);
@@ -191,7 +191,7 @@ namespace The203.CollectionJson.Test
             builder2.IsParent();
             builder2.AddSibling<RoomDimension>("Sibling", result2.AnswerId);
 
-            targets = new List<Link>();
+            targets = new List<ILink>();
             builder2.PopulateLinks(result3, targets);
             Assert.AreEqual("Sibling", targets.Last().rel);
             Assert.AreEqual("/RoomDimension", targets.Last().href);
@@ -206,7 +206,7 @@ namespace The203.CollectionJson.Test
                 .IsParent()
                 .AddChildCollection<Furniture>("Test", ar => ar.Furniture);
 
-            List<Link> targets = new List<Link>();
+            List<ILink> targets = new List<ILink>();
             builder.PopulateLinks(room3, targets);
 
             Assert.AreEqual(2, targets.Count);
@@ -224,7 +224,7 @@ namespace The203.CollectionJson.Test
                 .IsParent()
                 .AddChildCollection<Furniture>("Test", ar => ar.Furniture);
 
-            List<Link> targets = new List<Link>();
+            List<ILink> targets = new List<ILink>();
             builder.PopulateLinks(room1, targets);
 
             Assert.AreEqual(1, targets.Count);
@@ -240,7 +240,7 @@ namespace The203.CollectionJson.Test
                 .IsParent()
                 .AddChildCollection<Furniture>("Test", ai => null);
 
-            List<Link> targets = new List<Link>();
+            List<ILink> targets = new List<ILink>();
             builder.PopulateLinks(room1, targets);
 
             Assert.AreEqual(1, targets.Count);
@@ -256,7 +256,7 @@ namespace The203.CollectionJson.Test
                 .IsParent()
                 .AddChild<Furniture>("Test", ar => ar.Furniture.First());
 
-            List<Link> targets = new List<Link>();
+            List<ILink> targets = new List<ILink>();
             builder.PopulateLinks(room3, targets);
 
             Assert.AreEqual(2, targets.Count);
@@ -274,7 +274,7 @@ namespace The203.CollectionJson.Test
                 .IsParent()
                 .AddChild<Furniture>("Test", ar => null);
 
-            List<Link> targets = new List<Link>();
+            List<ILink> targets = new List<ILink>();
             builder.PopulateLinks(room3, targets);
             Assert.AreEqual("", targets[0].rel);
             Assert.AreEqual(1, targets.Count);
@@ -290,7 +290,7 @@ namespace The203.CollectionJson.Test
                 .AddSibling<Room>("Next", room1.Id);
 
 
-            List<Link> targets = new List<Link>();
+            List<ILink> targets = new List<ILink>();
             builder.PopulateLinks(room3, targets);
 
             Assert.AreEqual(2, targets.Count);
@@ -311,7 +311,7 @@ namespace The203.CollectionJson.Test
             var result = builder.CalculatePrependUrl(urlWithTemplateStuckInIt);
             result = result.AddParent("Guide", sampleHouse);
 
-            List<Link> links = new List<Link>();
+            List<ILink> links = new List<ILink>();
             result.PopulateLinks(room1, links);
 
             Assert.AreEqual(1, links.Count);
@@ -337,7 +337,7 @@ namespace The203.CollectionJson.Test
                 .AddParent<House>("Parent", ai => sampleHouse);
 
 
-            List<Link> targets = new List<Link>();
+            List<ILink> targets = new List<ILink>();
             builder.PopulateLinks(room1, targets);
 
             Assert.AreEqual(2, targets.Count);
@@ -359,7 +359,7 @@ namespace The203.CollectionJson.Test
                 .AddParent<House>("Parent", ai => sampleHouse);
 
 
-            List<Link> targets = new List<Link>();
+            List<ILink> targets = new List<ILink>();
             builder.PopulateLinks(room1, targets);
 
             Assert.AreEqual(3, targets.Count);

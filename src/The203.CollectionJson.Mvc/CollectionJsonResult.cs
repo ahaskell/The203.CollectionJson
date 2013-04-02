@@ -21,7 +21,7 @@ namespace The203.CollectionJson.Mvc
             this.collectionJson = collectionJson;
         }
 
-        public LinkBuilder<T> BuildLinks()
+        public ILinkBuilder<T> BuildLinks()
         {
             return collectionJson.BuildLinks();
         }

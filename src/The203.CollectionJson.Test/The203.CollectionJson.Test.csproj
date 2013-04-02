@@ -115,6 +115,10 @@
       <Project>{E3D75626-B32B-47D4-A58B-64EE3EB0082F}</Project>
       <Name>The203.CollectionJson.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\The203.CollectionJson.Infrastrcuture\The203.CollectionJson.Infrastrcuture.csproj">
+      <Project>{232665F4-59BE-4AB8-AA01-EF810D5A2DCF}</Project>
+      <Name>The203.CollectionJson.Infrastrcuture</Name>
+    </ProjectReference>
     <ProjectReference Include="..\The203.CollectionJson.Mvc\The203.CollectionJson.Mvc.csproj">
       <Project>{f05fd9c9-c4ae-4103-84f5-7ca962dc192d}</Project>
       <Name>The203.CollectionJson.Mvc</Name>

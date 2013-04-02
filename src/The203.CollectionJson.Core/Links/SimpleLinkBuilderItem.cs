@@ -20,7 +20,7 @@ namespace The203.CollectionJson.Core.Links
         }
 
 
-        public override void Resolve(TItem baseObject, IDictionary<LinkBuilderUrlType, string> urlMap, IDictionary<Type, IRouteMapping> mappings, IList<Link> links )
+        public override void Resolve(TItem baseObject, IDictionary<LinkBuilderUrlType, string> urlMap, IDictionary<Type, IRouteMapping> mappings, IList<ILink> links )
         {
             var url = CombinePath(GetPrependUrl(urlMap), CreateItemLink(mappings));
             links.Add(new Link(this.rel, url));

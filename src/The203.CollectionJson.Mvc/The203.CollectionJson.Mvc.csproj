@@ -23,6 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -82,8 +83,12 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\The203.CollectionJson.Core\The203.CollectionJson.Core.csproj">
-      <Project>{e3d75626-b32b-47d4-a58b-64ee3eb0082f}</Project>
+      <Project>{6BA276E8-30F0-482D-A279-65632296DDE3}</Project>
       <Name>The203.CollectionJson.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\The203.CollectionJson.Infrastrcuture\The203.CollectionJson.Infrastrcuture.csproj">
+      <Project>{232665F4-59BE-4AB8-AA01-EF810D5A2DCF}</Project>
+      <Name>The203.CollectionJson.Infrastrcuture</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

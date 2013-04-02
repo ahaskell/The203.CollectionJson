@@ -10,8 +10,10 @@ using The203.CollectionJson.Core.Model;
 
 namespace The203.CollectionJson.Core
 {
-    public class CollectionJsonLinker
-    {
+	
+
+	public class CollectionJsonLinker 
+	{
 	   private enum LinkerState
 	   {
 		  None,

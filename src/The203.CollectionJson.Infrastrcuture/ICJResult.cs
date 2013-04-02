@@ -5,6 +5,6 @@ namespace The203.CollectionJson.Core
 {
    public  interface ICJ<T> : ICJ
     {
-        LinkBuilder<T> BuildLinks();
+        ILinkBuilder<T> BuildLinks();
     }
 }
