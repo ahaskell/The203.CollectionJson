@@ -14,13 +14,13 @@ namespace The203.CollectionJson.Core
     {
 	   private IEnumerable<T> targetObjects;
 	   protected LinkBuilder<T> linkBuilder;
-	   protected CollectionJsonLinker collectionJsonLinker;
+	   protected ICollectionJsonLinker collectionJsonLinker;
 	   protected string collectionUrl;
 
 	   public ICollectionContainer Container { get; set; }
 	   
 
-	   protected CJ(CollectionJsonLinker collectionJsonLinker, string collectionUrl)
+	   protected CJ(ICollectionJsonLinker collectionJsonLinker, string collectionUrl)
 	   {
 		  this.linkBuilder = new LinkBuilder<T>(collectionJsonLinker.InternalMappings);
 		  this.collectionJsonLinker = collectionJsonLinker;
@@ -28,7 +28,7 @@ namespace The203.CollectionJson.Core
 		  this.Container = new CollectionContainer();
 	   }
 
-	   public CJ(T targetObject, CollectionJsonLinker collectionJsonLinker, string collectionUrl)
+	   public CJ(T targetObject, ICollectionJsonLinker collectionJsonLinker, string collectionUrl)
 		  : this(collectionJsonLinker, collectionUrl)
 	   {
 		  var objCol = new List<T>();
@@ -36,7 +36,7 @@ namespace The203.CollectionJson.Core
 		  this.targetObjects = objCol;            
 	   }
 
-	   public CJ(IEnumerable<T> targetCollection, CollectionJsonLinker collectionJsonLinker, string collectionUrl)
+	   public CJ(IEnumerable<T> targetCollection, ICollectionJsonLinker collectionJsonLinker, string collectionUrl)
 		  : this(collectionJsonLinker, collectionUrl)
 	   {
 		  this.targetObjects = targetCollection;
@@ -97,6 +97,10 @@ namespace The203.CollectionJson.Core
 	   public void AddTemplate()
 	   {
 		  this.Container.collection.template = (new CollectionJsonTemplating<T>()).GenerateTemplate();
+	   }
+	   public void AddTemplate<TT>()
+	   {
+		  this.Container.collection.template = (new CollectionJsonTemplating<TT>()).GenerateTemplate();
 	   }
     }
 }

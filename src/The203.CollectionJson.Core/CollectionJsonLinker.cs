@@ -12,7 +12,7 @@ namespace The203.CollectionJson.Core
 {
 	
 
-	public class CollectionJsonLinker 
+	public class CollectionJsonLinker : ICollectionJsonLinker
 	{
 	   private enum LinkerState
 	   {

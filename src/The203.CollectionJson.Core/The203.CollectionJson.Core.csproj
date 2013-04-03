@@ -75,6 +75,7 @@
   <ItemGroup>
     <Compile Include="CollectionJsonLinker.cs" />
     <Compile Include="CJ.cs" />
+    <Compile Include="ICollectionJsonLinker.cs" />
     <Compile Include="IRouteMapping.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Links\AbsoluteLinkBuilderItem.cs" />
