@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TemplateIgnore.cs" />
     <Compile Include="Data.cs" />
     <Compile Include="ICJException.cs" />
     <Compile Include="HideFromClientAttribute.cs" />
@@ -47,12 +48,15 @@
     <Compile Include="ICJResult.cs" />
     <Compile Include="ICollectionContainer.cs" />
     <Compile Include="ICollectionJsonCollection.cs" />
+    <Compile Include="ICollectionJsonRoute.cs" />
     <Compile Include="ICollectionJsonTemplating.cs" />
     <Compile Include="IData.cs" />
     <Compile Include="IError.cs" />
     <Compile Include="IItem.cs" />
     <Compile Include="ILink.cs" />
     <Compile Include="ILinkBuilder.cs" />
+    <Compile Include="IRouteCreation.cs" />
+    <Compile Include="IRouteMapping.cs" />
     <Compile Include="ITemplate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

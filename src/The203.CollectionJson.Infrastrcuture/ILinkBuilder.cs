@@ -21,7 +21,7 @@ namespace The203.CollectionJson.Core.Links
 		ILinkBuilder<TAnchor> AddRelativeGroup<TLinkRelativeTo, TGroupType>(Func<TGroupType, String> relationResolver, Func<TAnchor, IEnumerable<TGroupType>> getRelatedGroup, Func<TGroupType, String> resolveItemId, String tackOnUrl);
 		void PopulateLinks(TAnchor source, IList<ILink> targetLinks);
 		ILinkBuilder<TAnchor> PrependToUrl(string urlPart);
-		ILinkBuilder<TAnchor> TryToCalculatePrependUrl(string url);
-		ILinkBuilder<TAnchor> CalculatePrependUrl(string url);
+		ILinkBuilder<TAnchor> TryToCalculatePrependUrl<RootT>(string url);
+		ILinkBuilder<TAnchor> CalculatePrependUrl<RootT>(string url);
 	}
 }

@@ -36,7 +36,7 @@ namespace The203.CollectionJson.Core
 		  PropertyInfo[] properties = templatable.GetProperties(BindingFlags.Static | BindingFlags.Public | BindingFlags.GetProperty | BindingFlags.Instance);
 		  foreach (PropertyInfo pi in properties)
 		  {
-			 if (pi.ExposedToClient())
+			 if (pi.ExposedToClient() && !pi.GetCustomAttributes(typeof(TemplateIgnoreAttribute), true).Any())
 			 {
 				data.Add(new Data(pi.Name, ""));
 			 }

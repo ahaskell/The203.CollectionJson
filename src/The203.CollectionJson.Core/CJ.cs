@@ -14,30 +14,33 @@ namespace The203.CollectionJson.Core
     {
 	   private IEnumerable<T> targetObjects;
 	   protected LinkBuilder<T> linkBuilder;
-	   protected ICollectionJsonLinker collectionJsonLinker;
+	   protected IRouteBuilder routeBuilder;
 	   protected string collectionUrl;
 
 	   public ICollectionContainer Container { get; set; }
-	   
 
-	   protected CJ(ICollectionJsonLinker collectionJsonLinker, string collectionUrl)
+
+	   protected CJ(IRouteBuilder routeBuilder, string collectionUrl)
 	   {
-		  this.linkBuilder = new LinkBuilder<T>(collectionJsonLinker.InternalMappings);
-		  this.collectionJsonLinker = collectionJsonLinker;
+		  this.linkBuilder = new LinkBuilder<T>(routeBuilder);
+		  this.routeBuilder = routeBuilder;
 		  this.collectionUrl = collectionUrl;
 		  this.Container = new CollectionContainer();
 	   }
 
-	   public CJ(T targetObject, ICollectionJsonLinker collectionJsonLinker, string collectionUrl)
-		  : this(collectionJsonLinker, collectionUrl)
+	   public CJ(T targetObject, IRouteBuilder routeBuilder, string collectionUrl)
+		  : this(routeBuilder, collectionUrl)
 	   {
 		  var objCol = new List<T>();
-		  objCol.Add(targetObject);
-		  this.targetObjects = objCol;            
+		  if (targetObject != null)
+		  {
+			 objCol.Add(targetObject);
+		  }
+		  this.targetObjects = objCol;
 	   }
 
-	   public CJ(IEnumerable<T> targetCollection, ICollectionJsonLinker collectionJsonLinker, string collectionUrl)
-		  : this(collectionJsonLinker, collectionUrl)
+	   public CJ(IEnumerable<T> targetCollection, IRouteBuilder routeBuilder, string collectionUrl)
+		  : this(routeBuilder, collectionUrl)
 	   {
 		  this.targetObjects = targetCollection;
 	   }
@@ -51,7 +54,7 @@ namespace The203.CollectionJson.Core
 	   {
 		  //There is a possibility of nulls being passed in thanks to changes made elsewhere in linking. Thanks to Adam....
 		  if (obj == null)
-		  { 
+		  {
 			 return;
 		  }
 		  PropertyInfo[] properties = obj.GetType().GetProperties(BindingFlags.Static | BindingFlags.Public | BindingFlags.GetProperty | BindingFlags.Instance);
@@ -75,7 +78,7 @@ namespace The203.CollectionJson.Core
 
 	   public ICollectionContainer CreateCollectionContainer()
 	   {
-		  
+
 		  foreach (T item in this.targetObjects)
 		  {
 			 this.Container.collection.items.Add(CreateItems(item));

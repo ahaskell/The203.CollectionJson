@@ -19,16 +19,17 @@ namespace The203.CollectionJson.Core.Links
     /// </value>
     public class LinkBuilder<TAnchor> : ILinkBuilder<TAnchor>
     {
-	   private readonly IDictionary<Type, IRouteMapping> mappings;
+	   private readonly IRouteBuilder routeBuilder;
 	   private readonly PluralValueDictionary<Type, IRouteMapping> alternateMappings;
 	   private readonly IDictionary<LinkBuilderUrlType, String> baseUrls;
 	   private readonly IList<ILinkBuilderItem<TAnchor>> linkBuilders;
 	   private ILinkBuilderItem<TAnchor> parent;
 	   private ILink parentLink;
+	   private Type rootType;
 
-	   public LinkBuilder(IDictionary<Type, IRouteMapping> mappingData)
+	   public LinkBuilder(IRouteBuilder routeBuilder)
 	   {
-		  this.mappings = mappingData;
+		  this.routeBuilder = routeBuilder;
 		  this.linkBuilders = new List<ILinkBuilderItem<TAnchor>>();
 		  this.baseUrls = new Dictionary<LinkBuilderUrlType, String> {
 			  {LinkBuilderUrlType.Prepend, ""}
@@ -38,8 +39,8 @@ namespace The203.CollectionJson.Core.Links
 		  };
 	   }
 
-	   public LinkBuilder(IDictionary<Type, IRouteMapping> mappingData, PluralValueDictionary<Type, IRouteMapping> alternateMappingData) :
-		  this(mappingData)
+	   public LinkBuilder(IRouteBuilder routeBuilder, PluralValueDictionary<Type, IRouteMapping> alternateMappingData) :
+		  this(routeBuilder)
 	   {
 		  this.alternateMappings = alternateMappingData;
 	   }
@@ -47,6 +48,7 @@ namespace The203.CollectionJson.Core.Links
 
 	   public ILinkBuilder<TAnchor> IsParent()
 	   {
+		  this.rootType = typeof(TAnchor);
 		  this.parentLink = new Link("", "");
 		  this.baseUrls[LinkBuilderUrlType.Parent] = this.baseUrls[LinkBuilderUrlType.Prepend];
 		  return this;
@@ -145,7 +147,7 @@ namespace The203.CollectionJson.Core.Links
 		  this.baseUrls[LinkBuilderUrlType.OriginalItem] = GetSelf(source);
 		  foreach (var linkBuilderItem in this.linkBuilders)
 		  {
-			 linkBuilderItem.Resolve(source, this.baseUrls, this.mappings, targetLinks);
+			 linkBuilderItem.Resolve(source, this.baseUrls, routeBuilder.GetRoutes(this.rootType), targetLinks);
 		  }
 	   }
 
@@ -153,14 +155,18 @@ namespace The203.CollectionJson.Core.Links
 	   {
 		  if (this.parentLink == null)
 		  {
-			 if (this.parent == null)
-			 {
-				throw new ApplicationException("Cannot resolve top-level URL.  Call IsParent or AddParent.");
-			 }
-			 IList<ILink> parentLinkList = new List<ILink>();
-			 this.parent.Resolve(source, this.baseUrls, this.mappings, parentLinkList);
-			 this.parentLink = parentLinkList[0];
-			 this.baseUrls[LinkBuilderUrlType.Parent] = this.parentLink.href;
+			  if (this.parent == null)
+			  {
+				  throw new ApplicationException("Cannot resolve top-level URL.  Call IsParent or AddParent.");
+			  }
+			  IList<ILink> parentLinkList = new List<ILink>();
+			  if (this.rootType == null)
+			  {
+				  this.rootType = this.parent.LinkFor;
+			  }
+			  this.parent.Resolve(source, this.baseUrls, routeBuilder.GetRoutes(this.rootType), parentLinkList);
+			  this.parentLink = parentLinkList[0];
+			  this.baseUrls[LinkBuilderUrlType.Parent] = this.parentLink.href;
 		  }
 	   }
 
@@ -176,7 +182,7 @@ namespace The203.CollectionJson.Core.Links
 			 self.Always();
 		  }
 		  IList<ILink> selfLinkList = new List<ILink>();
-		   self.Resolve(source, this.baseUrls, this.mappings, selfLinkList);
+		  self.Resolve(source, this.baseUrls, routeBuilder.GetRoutes(this.rootType), selfLinkList);
 		  return selfLinkList[0].href;
 	   }
 
@@ -186,18 +192,21 @@ namespace The203.CollectionJson.Core.Links
 		  return this;
 	   }
 
-	   public ILinkBuilder<TAnchor> TryToCalculatePrependUrl(string url)
+	   public ILinkBuilder<TAnchor> TryToCalculatePrependUrl<RootT>(string url)
 	   {
-		  if (mappings.ContainsKey(typeof(TAnchor)) && mappings.ContainsKey(mappings[typeof(TAnchor)].Parent))
+		  IDictionary<Type, IRouteMapping> routes = routeBuilder.GetRoutes(typeof(RootT));
+		   if (routes.ContainsKey(typeof(TAnchor)) && routes.ContainsKey(routes[typeof(TAnchor)].Parent))
 		  {
-			 return CalculatePrependUrl(url);
+			 return CalculatePrependUrl<RootT>(url);
 		  }
 		  return PrependToUrl(url);
 	   }
 
-	   public ILinkBuilder<TAnchor> CalculatePrependUrl(string url)
-	   {//This method will throw errors if it can not find a parent, but it won't hide odd bugs...use at own risk
-		  String parentRouteTemplate = mappings[mappings[typeof(TAnchor)].Parent].RouteTemplate;
+	   public ILinkBuilder<TAnchor> CalculatePrependUrl<RootT>(string url)
+	   {//This method will throw errors if it can not find a parent, but it won't hide odd bugs...use at own risk4
+		   this.rootType = typeof (RootT);
+		   IDictionary<Type, IRouteMapping> routes = routeBuilder.GetRoutes(this.rootType);
+		  String parentRouteTemplate = routes[routes[typeof(TAnchor)].Parent].RouteTemplate;
 		  String searchString = parentRouteTemplate.Remove(parentRouteTemplate.IndexOf("/", StringComparison.Ordinal));
 		  String urlPrefix = url.Remove(url.IndexOf("/" + searchString + "/", StringComparison.Ordinal));
 		  PrependToUrl(urlPrefix);
