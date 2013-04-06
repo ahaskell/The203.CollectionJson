@@ -23,7 +23,7 @@ namespace The203.CollectionJson.Test
         protected Painting painting1;
         protected Painting painting2;
         protected RouteBuilder defaultRouteBuilder;
-
+        protected String defaultHouseUrl = "http://www.the203.info/Houses/";
         [TestInitialize]
         public void Setup()
         {
@@ -59,7 +59,7 @@ namespace The203.CollectionJson.Test
             room3 = new Room(realRoomTitle) {Id = "CD"};
             room3.Furniture.Add(new Furniture("Hello Choose me") {Id = "1CD", Weight = 10});
             room3.Furniture.Add(new Furniture("Probably Best to leave me alone") {Id = "2CD", Weight = 0});
-            room3.QtiAssessmentId = "4";
+            room3.ClientShallntSeeThis = "4";
 
             room4 = new Room("Room 4") {Id = "GH"};
             room4.Furniture.Add(new Furniture("Hello Choose Me") {Id = "1GH", Weight = 10});

@@ -27,7 +27,7 @@ namespace The203.CollectionJson.Test
             domain.Furniture.Add(new Furniture());
             domain.Furniture.Add(new Furniture());
             domain.Id = "5";
-            domain.QtiAssessmentId = "4";
+            domain.ClientShallntSeeThis = "4";
             CJ<Room> cjRoomDimension = new CJ<Room>(domain, cjLinker, "");
             cjRoomDimension.BuildLinks().AddParent<House>("parent", new House());
             var actual = from d in cjRoomDimension.CreateCollectionContainer().collection.items.First().data
@@ -54,7 +54,7 @@ namespace The203.CollectionJson.Test
             domain.Furniture.Add(new Furniture());
             domain.Furniture.Add(new Furniture());
             domain.Id = "5";
-            domain.QtiAssessmentId = "4";
+            domain.ClientShallntSeeThis = "4";
 
             CJ<Room> cjRoomDimension = new CJ<Room>(domain, cjLinker, "");
             Assert.IsNull(cjRoomDimension.Container.collection.template);

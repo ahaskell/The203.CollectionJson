@@ -20,7 +20,7 @@ namespace The203.CollectionJson.Test.Domain
         public string Title { get; private set; }
 
         [HideFromClient]
-        public string QtiAssessmentId { get; set; }
+        public string ClientShallntSeeThis { get; set; }
 
         public string RoomId { get; set; }
         internal RoomDimension RoomDimension { get; set; }

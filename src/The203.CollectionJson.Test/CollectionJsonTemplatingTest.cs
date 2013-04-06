@@ -41,14 +41,14 @@ namespace The203.CollectionJson.Test
         {
             CollectionJsonTemplating<Room> template = new CollectionJsonTemplating<Room>();
             var actual = template.GenerateTemplate();
-            string[] hiddenFields = new string[] {"QtiAssessmentId"};
+            string[] hiddenFields = new string[] {"ClientShallntSeeThis"};
 
             foreach (Data d in actual.data)
                 Assert.IsFalse(hiddenFields.Contains(d.name));
 
             CollectionJsonTemplating<Furniture> template2 = new CollectionJsonTemplating<Furniture>();
             actual = template2.GenerateTemplate();
-            hiddenFields = new string[] {"QtiAssessmentId"};
+            hiddenFields = new string[] {"ClientShallntSeeThis"};
 
             foreach (Data d in actual.data)
                 Assert.IsFalse(hiddenFields.Contains(d.name));
@@ -59,7 +59,7 @@ namespace The203.CollectionJson.Test
         {
             CollectionJsonTemplating<Room> template = new CollectionJsonTemplating<Room>();
             var actual = template.GenerateTemplate();
-            string[] visibleFields = new string[] {"Id", "Title", "QtiAssessmentId", "RoomDimension", "RoomId", "RoomDimension"};
+            string[] visibleFields = new string[] {"Id", "Title", "ClientShallntSeeThis", "RoomDimension", "RoomId", "RoomDimension"};
 
             foreach (Data d in actual.data)
                 Assert.IsTrue(visibleFields.Contains(d.name));

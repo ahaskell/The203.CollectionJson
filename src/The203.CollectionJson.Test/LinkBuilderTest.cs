@@ -120,7 +120,7 @@ namespace The203.CollectionJson.Test
         }
 
         [TestMethod]
-        [ExpectedException(typeof (ApplicationException))]
+        [ExpectedException(typeof(ApplicationException))]
         public void EnsureErrorThrownIfParentNull()
         {
             //  CollectionJsonRoomDimension<Room> usg = new CollectionJsonRoomDimension<Room>(room1);
@@ -130,7 +130,7 @@ namespace The203.CollectionJson.Test
         }
 
         [TestMethod]
-        [ExpectedException(typeof (ApplicationException))]
+        [ExpectedException(typeof(ApplicationException))]
         public void EnsureErrorThrownIfParentNullForGetSelf()
         {
             CJ<Room> result = new CJ<Room>(room1, defaultRouteBuilder, "");
@@ -140,7 +140,7 @@ namespace The203.CollectionJson.Test
         [TestMethod]
         public void EnsureIsParentSetsParentLink()
         {
-            LinkBuilder<Room> builder = new LinkBuilder<Room>(defaultRouteBuilder);
+            LinkBuilder<House> builder = new LinkBuilder<House>(defaultRouteBuilder);
 
             // IsParent is supposed to return the ref to builder.  
             var result = builder.IsParent();
@@ -152,51 +152,53 @@ namespace The203.CollectionJson.Test
             // the parentLink has been set.  Kind of indirect and a usg of knowledge of the internals,
             // but there you are.
             List<ILink> target = new List<ILink>();
-            builder.PopulateLinks(room1, target);
-            Assert.AreEqual("", target.First().rel);
-            Assert.AreEqual(1, target.Count());
+            builder.PopulateLinks(sampleHouse, target);
+            Assert.AreEqual(0, target.Count());
         }
 
         [TestMethod]
         public void EnsureAddParentSetsParent()
         {
-            LinkBuilder<Furniture> builder = new LinkBuilder<Furniture>(defaultRouteBuilder);
+            LinkBuilder<Room> builder = new LinkBuilder<Room>(defaultRouteBuilder);
 
             // AddParent is supposed to return the ref to builder.  
-            var result = builder.AddParent<Room>("Test", room3);
+            var result = builder.AddParent<House>("Test", sampleHouse);
             Assert.AreSame(builder, result);
 
             List<ILink> targets = new List<ILink>();
-            builder.PopulateLinks(room3.Furniture.First(), targets);
+            builder.PopulateLinks(room3, targets);
             Assert.AreEqual("Test", targets.First().rel);
         }
 
         [TestMethod]
         public void EnsureAddParentWorksWithId()
         {
-            LinkBuilder<Furniture> builder = new LinkBuilder<Furniture>(defaultRouteBuilder);
+            LinkBuilder<Room> builder = new LinkBuilder<Room>(defaultRouteBuilder);
 
             // AddParent is supposed to return the ref to builder.  
-            var result = builder.AddParent<Room>("Test", room3.Id);
+            var result = builder.AddParent<House>("Test", sampleHouse.HouseId);
             Assert.AreSame(builder, result);
 
             List<ILink> targets = new List<ILink>();
-            builder.PopulateLinks(room3.Furniture.First(), targets);
+            builder.PopulateLinks(room3, targets);
             Assert.AreEqual("Test", targets.First().rel);
-            Assert.AreEqual("/Rooms/" + room3.Id, targets.First().href);
+            Assert.AreEqual("/Houses/" + sampleHouse.HouseId, targets.First().href);
+        }
+        [TestMethod]
+        public void SomeOtherTestNameThis()
+        {
+            LinkBuilder<Furniture> builder2 = new LinkBuilder<Furniture>(defaultRouteBuilder);
 
-            LinkBuilder<RoomDimension> builder2 =
-                new LinkBuilder<RoomDimension>(defaultRouteBuilder);
+            Furniture result2 = new Furniture() { Id = "AA" };
+            Furniture result3 = new Furniture() { Id = "XX" };
+            builder2.CalculatePrependUrl<House>(defaultHouseUrl + "/123/Rooms/1")
+                .AddParent<Room>("parent", "1")
+            .AddSibling<Furniture>("Sibling", result2);
 
-            RoomDimension result2 = new RoomDimension() {AnswerId = "AA"};
-            RoomDimension result3 = new RoomDimension() {AnswerId = "XX"};
-            builder2.IsParent();
-            builder2.AddSibling<RoomDimension>("Sibling", result2.AnswerId);
-
-            targets = new List<ILink>();
+            var targets = new List<ILink>();
             builder2.PopulateLinks(result3, targets);
             Assert.AreEqual("Sibling", targets.Last().rel);
-            Assert.AreEqual("/RoomDimension", targets.Last().href);
+            Assert.AreEqual(defaultHouseUrl + "/123/Rooms/1/Furniture/" + result2.Id, targets.Last().href);
         }
 
         [TestMethod]
@@ -205,32 +207,31 @@ namespace The203.CollectionJson.Test
             LinkBuilder<Room> builder = new LinkBuilder<Room>(defaultRouteBuilder);
 
             var result = builder
-                .IsParent()
+                .AddParent("House", sampleHouse)
                 .AddChildCollection<Furniture>("Test", ar => ar.Furniture);
 
             List<ILink> targets = new List<ILink>();
             builder.PopulateLinks(room3, targets);
 
             Assert.AreEqual(2, targets.Count);
-            Assert.AreEqual("", targets[0].rel);
+            Assert.AreEqual("House", targets[0].rel);
             Assert.AreEqual("Test", targets[1].rel);
         }
 
         [TestMethod]
         public void EnsureAddChildrenDoesntCreateLinkIfCollectionEmpty()
         {
-            room1.Furniture.Clear();
-            LinkBuilder<Room> builder = new LinkBuilder<Room>(defaultRouteBuilder);
+            sampleHouse.Rooms.Clear();
+            LinkBuilder<House> builder = new LinkBuilder<House>(defaultRouteBuilder);
 
             var result = builder
                 .IsParent()
-                .AddChildCollection<Furniture>("Test", ar => ar.Furniture);
+                .AddChildCollection<Room>("Test", h => h.Rooms);
 
             List<ILink> targets = new List<ILink>();
-            builder.PopulateLinks(room1, targets);
+            builder.PopulateLinks(sampleHouse, targets);
 
-            Assert.AreEqual(1, targets.Count);
-            Assert.AreEqual("", targets[0].rel);
+            Assert.AreEqual(0, targets.Count);
         }
 
         [TestMethod]
@@ -239,32 +240,33 @@ namespace The203.CollectionJson.Test
             LinkBuilder<Room> builder = new LinkBuilder<Room>(defaultRouteBuilder);
 
             var result = builder
-                .IsParent()
+                .AddParent("parent", sampleHouse)
                 .AddChildCollection<Furniture>("Test", ai => null);
 
             List<ILink> targets = new List<ILink>();
             builder.PopulateLinks(room1, targets);
 
             Assert.AreEqual(1, targets.Count);
-            Assert.AreEqual("", targets[0].rel);
+            Assert.AreEqual("parent", targets[0].rel);
         }
 
         [TestMethod]
         public void EnsureAddChildCreatesExactlyOneLink()
         {
-            LinkBuilder<Room> builder = new LinkBuilder<Room>(defaultRouteBuilder);
+            sampleHouse.Rooms.Add(room1);
+            sampleHouse.Rooms.Add(room2);
+            LinkBuilder<House> builder = new LinkBuilder<House>(defaultRouteBuilder);
 
             var result = builder
                 .IsParent()
-                .AddChild<Furniture>("Test", ar => ar.Furniture.First());
+                .AddChild<Room>("Test", h => h.Rooms.First());
 
             List<ILink> targets = new List<ILink>();
-            builder.PopulateLinks(room3, targets);
+            builder.PopulateLinks(sampleHouse, targets);
 
-            Assert.AreEqual(2, targets.Count);
-            Assert.AreEqual("", targets[0].rel);
-            Assert.AreEqual("Test", targets[1].rel);
-            Assert.IsTrue(targets[1].href.EndsWith(room3.Furniture.First().Id.ToString()));
+            Assert.AreEqual(1, targets.Count);
+            Assert.AreEqual("Test", targets[0].rel);
+            Assert.IsTrue(targets[0].href.EndsWith(room1.Id));
         }
 
         [TestMethod]
@@ -273,58 +275,14 @@ namespace The203.CollectionJson.Test
             LinkBuilder<Room> builder = new LinkBuilder<Room>(defaultRouteBuilder);
 
             var result = builder
-                .IsParent()
+                .AddParent("parent", sampleHouse)
                 .AddChild<Furniture>("Test", ar => null);
 
             List<ILink> targets = new List<ILink>();
             builder.PopulateLinks(room3, targets);
-            Assert.AreEqual("", targets[0].rel);
             Assert.AreEqual(1, targets.Count);
-        }
-
-        [TestMethod]
-        public void EnsureAddSiblingOverloadWorks()
-        {
-            LinkBuilder<Room> builder = new LinkBuilder<Room>(defaultRouteBuilder);
-
-            var result = builder
-                .IsParent()
-                .AddSibling<Room>("Next", room1.Id);
-
-
-            List<ILink> targets = new List<ILink>();
-            builder.PopulateLinks(room3, targets);
-
-            Assert.AreEqual(2, targets.Count);
-            Assert.AreEqual("Next", targets[1].rel);
-            Assert.AreEqual("/Rooms/" + room1.Id, targets[1].href);
-        }
-
-        [TestMethod]
-        public void SeeWhatCalculatePrependUrlDoes()
-        {
-            var mappings = defaultRouteBuilder;
-            string searchedRouteTemplate = defaultRouteBuilder.GetRoutes(typeof(House))[typeof(Room)].RouteTemplate;
-            LinkBuilder<Room> builder = new LinkBuilder<Room>(defaultRouteBuilder);
-
-            string randomUrl = @"https://plus.google.com/hangouts/_/7941eba9551c7d3090763b7d978950594a230209#/";
-            string urlWithTemplateStuckInIt = randomUrl + searchedRouteTemplate + "/asdfaksdafsdfasdf";
-
-            var result = builder.CalculatePrependUrl<House>(urlWithTemplateStuckInIt);
-            result = result.AddParent("Guide", sampleHouse);
-
-            List<ILink> links = new List<ILink>();
-            result.PopulateLinks(room1, links);
-
-            Assert.AreEqual(1, links.Count);
-
-            var actual = links[0];
-            Assert.AreEqual("Guide", actual.rel);
-            Assert.AreEqual(randomUrl + "Houses/123", actual.href);
-            Assert.IsFalse(actual.href.Contains("asdfaksdafsdfasdf"));
-
-            // Apparently it lops off the variable portion of the parent's template, looks for that in the URL,
-            // removes that and anything afterward, and uses the result of that for the prefix.  
+            Assert.AreEqual("parent", targets[0].rel);
+            Assert.AreEqual("/Houses/" + sampleHouse.HouseId, targets[0].href);
         }
 
 
