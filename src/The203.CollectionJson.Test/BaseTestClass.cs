@@ -2,6 +2,7 @@
 using System.Web.Routing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using The203.CollectionJson.Core;
+using The203.CollectionJson.Mvc;
 using The203.CollectionJson.Test.Domain;
 
 namespace The203.CollectionJson.Test
@@ -10,7 +11,7 @@ namespace The203.CollectionJson.Test
     public class BaseTestClass
     {
         protected WindowTreatment windowTreatment1;
-        protected CollectionJsonLinker defaultCollectionJsonLinker;
+        protected ICollectionJsonRoute defaultCollectionJsonLinker;
         protected Lamp lamp1;
         protected Lamp lamp2;
         protected Room room1;
@@ -21,19 +22,21 @@ namespace The203.CollectionJson.Test
         protected House sampleHouse;
         protected Painting painting1;
         protected Painting painting2;
+        protected RouteBuilder defaultRouteBuilder;
 
         [TestInitialize]
         public void Setup()
         {
             RouteCollection routes = new RouteCollection();
-            defaultCollectionJsonLinker = new CollectionJsonLinker();
-            defaultCollectionJsonLinker.StartPrimaryRoute()
+            defaultRouteBuilder = new RouteBuilder();
+            defaultCollectionJsonLinker = defaultRouteBuilder.StartPrimaryRoute<House>();
+            defaultCollectionJsonLinker
                                        .AddItemAndCollection<House>("Houses/{houseId}", sg => sg.HouseId)
                                        .AddItemAndCollection<House, Room>("Rooms/{roomId}", ai => ai.Id)
                                        .AddItemAndCollection<Room, Furniture>("Furniture/{furnitureId}",
                                                                               ans => ans.Id.ToString())
                                        .AddEmbeddedItem<Room, RoomDimension>("RoomDimension")
-                                       .MapRoutes(routes);
+                                       .MapRoutes <RouteCollection>(new RouteCreation(), routes);
 
 
             painting1 = new Painting("1", "Painting 1", 1);

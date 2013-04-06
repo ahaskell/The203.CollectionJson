@@ -12,10 +12,12 @@ namespace The203.CollectionJson.Test
     [TestClass]
     public class LinkBuilderTest : BaseTestClass
     {
+
         [TestMethod]
         public void EnsureLinkbuilderCanHaveAParent()
         {
-            LinkBuilder<Room> linkBuilder = new LinkBuilder<Room>(defaultCollectionJsonLinker.InternalMappings);
+
+            LinkBuilder<Room> linkBuilder = new LinkBuilder<Room>(defaultRouteBuilder);
             var actual = linkBuilder.AddParent<House>("House", sampleHouse);
             IList<ILink> links = new List<ILink>();
             linkBuilder.PopulateLinks(room3, links);
@@ -30,7 +32,7 @@ namespace The203.CollectionJson.Test
         [TestMethod]
         public void EnsureLinkbuilderCanHaveAChild()
         {
-            LinkBuilder<Room> linkBuilder = new LinkBuilder<Room>(defaultCollectionJsonLinker.InternalMappings);
+            LinkBuilder<Room> linkBuilder = new LinkBuilder<Room>(defaultRouteBuilder);
             room3.RoomDimension = new RoomDimension();
             room3.RoomDimension.AnswerId = Guid.NewGuid().ToString();
             room3.RoomDimension.Score = 10;
@@ -53,7 +55,7 @@ namespace The203.CollectionJson.Test
             sampleHouse.Rooms.Add(room3);
             sampleHouse.Rooms.Add(room1);
 
-            LinkBuilder<House> linkBuilder = new LinkBuilder<House>(defaultCollectionJsonLinker.InternalMappings);
+            LinkBuilder<House> linkBuilder = new LinkBuilder<House>(defaultRouteBuilder);
             var actual = linkBuilder.IsParent()
                                     .AddChildCollection<Room>("Rooms", sg => sg.Rooms);
             var links = new List<ILink>();
@@ -69,7 +71,7 @@ namespace The203.CollectionJson.Test
         [TestMethod]
         public void EnsureLinkbuilderCanHaveChildren()
         {
-            LinkBuilder<Room> linkBuilder = new LinkBuilder<Room>(defaultCollectionJsonLinker.InternalMappings);
+            LinkBuilder<Room> linkBuilder = new LinkBuilder<Room>(defaultRouteBuilder);
             room3.RoomDimension = new RoomDimension();
             room3.RoomDimension.AnswerId = Guid.NewGuid().ToString();
             room3.RoomDimension.Score = 10;
@@ -93,7 +95,7 @@ namespace The203.CollectionJson.Test
         [TestMethod]
         public void EnsureLinkbuilderCanHaveSiblings()
         {
-            LinkBuilder<Room> linkBuilder = new LinkBuilder<Room>(defaultCollectionJsonLinker.InternalMappings);
+            LinkBuilder<Room> linkBuilder = new LinkBuilder<Room>(defaultRouteBuilder);
             room3.RoomDimension = new RoomDimension();
             room3.RoomDimension.AnswerId = Guid.NewGuid().ToString();
             room3.RoomDimension.Score = 10;
@@ -122,7 +124,7 @@ namespace The203.CollectionJson.Test
         public void EnsureErrorThrownIfParentNull()
         {
             //  CollectionJsonRoomDimension<Room> usg = new CollectionJsonRoomDimension<Room>(room1);
-            LinkBuilder<Room> builder = new LinkBuilder<Room>(defaultCollectionJsonLinker.InternalMappings);
+            LinkBuilder<Room> builder = new LinkBuilder<Room>(defaultRouteBuilder);
             builder.AddChild("Test", ai => ai.Furniture);
             builder.PopulateLinks(room1, new List<ILink>());
         }
@@ -131,14 +133,14 @@ namespace The203.CollectionJson.Test
         [ExpectedException(typeof (ApplicationException))]
         public void EnsureErrorThrownIfParentNullForGetSelf()
         {
-            CJ<Room> result = new CJ<Room>(room1, defaultCollectionJsonLinker, "");
+            CJ<Room> result = new CJ<Room>(room1, defaultRouteBuilder, "");
             var container = result.CreateCollectionContainer();
         }
 
         [TestMethod]
         public void EnsureIsParentSetsParentLink()
         {
-            LinkBuilder<Room> builder = new LinkBuilder<Room>(defaultCollectionJsonLinker.InternalMappings);
+            LinkBuilder<Room> builder = new LinkBuilder<Room>(defaultRouteBuilder);
 
             // IsParent is supposed to return the ref to builder.  
             var result = builder.IsParent();
@@ -158,7 +160,7 @@ namespace The203.CollectionJson.Test
         [TestMethod]
         public void EnsureAddParentSetsParent()
         {
-            LinkBuilder<Furniture> builder = new LinkBuilder<Furniture>(defaultCollectionJsonLinker.InternalMappings);
+            LinkBuilder<Furniture> builder = new LinkBuilder<Furniture>(defaultRouteBuilder);
 
             // AddParent is supposed to return the ref to builder.  
             var result = builder.AddParent<Room>("Test", room3);
@@ -172,7 +174,7 @@ namespace The203.CollectionJson.Test
         [TestMethod]
         public void EnsureAddParentWorksWithId()
         {
-            LinkBuilder<Furniture> builder = new LinkBuilder<Furniture>(defaultCollectionJsonLinker.InternalMappings);
+            LinkBuilder<Furniture> builder = new LinkBuilder<Furniture>(defaultRouteBuilder);
 
             // AddParent is supposed to return the ref to builder.  
             var result = builder.AddParent<Room>("Test", room3.Id);
@@ -184,7 +186,7 @@ namespace The203.CollectionJson.Test
             Assert.AreEqual("/Rooms/" + room3.Id, targets.First().href);
 
             LinkBuilder<RoomDimension> builder2 =
-                new LinkBuilder<RoomDimension>(defaultCollectionJsonLinker.InternalMappings);
+                new LinkBuilder<RoomDimension>(defaultRouteBuilder);
 
             RoomDimension result2 = new RoomDimension() {AnswerId = "AA"};
             RoomDimension result3 = new RoomDimension() {AnswerId = "XX"};
@@ -200,7 +202,7 @@ namespace The203.CollectionJson.Test
         [TestMethod]
         public void EnsureAddChildrenCreatesAllChildren()
         {
-            LinkBuilder<Room> builder = new LinkBuilder<Room>(defaultCollectionJsonLinker.InternalMappings);
+            LinkBuilder<Room> builder = new LinkBuilder<Room>(defaultRouteBuilder);
 
             var result = builder
                 .IsParent()
@@ -218,7 +220,7 @@ namespace The203.CollectionJson.Test
         public void EnsureAddChildrenDoesntCreateLinkIfCollectionEmpty()
         {
             room1.Furniture.Clear();
-            LinkBuilder<Room> builder = new LinkBuilder<Room>(defaultCollectionJsonLinker.InternalMappings);
+            LinkBuilder<Room> builder = new LinkBuilder<Room>(defaultRouteBuilder);
 
             var result = builder
                 .IsParent()
@@ -234,7 +236,7 @@ namespace The203.CollectionJson.Test
         [TestMethod]
         public void EnsureAddChildrenHandlesNullCollection()
         {
-            LinkBuilder<Room> builder = new LinkBuilder<Room>(defaultCollectionJsonLinker.InternalMappings);
+            LinkBuilder<Room> builder = new LinkBuilder<Room>(defaultRouteBuilder);
 
             var result = builder
                 .IsParent()
@@ -250,7 +252,7 @@ namespace The203.CollectionJson.Test
         [TestMethod]
         public void EnsureAddChildCreatesExactlyOneLink()
         {
-            LinkBuilder<Room> builder = new LinkBuilder<Room>(defaultCollectionJsonLinker.InternalMappings);
+            LinkBuilder<Room> builder = new LinkBuilder<Room>(defaultRouteBuilder);
 
             var result = builder
                 .IsParent()
@@ -268,7 +270,7 @@ namespace The203.CollectionJson.Test
         [TestMethod]
         public void EnsureAddChildHandlesNull()
         {
-            LinkBuilder<Room> builder = new LinkBuilder<Room>(defaultCollectionJsonLinker.InternalMappings);
+            LinkBuilder<Room> builder = new LinkBuilder<Room>(defaultRouteBuilder);
 
             var result = builder
                 .IsParent()
@@ -283,7 +285,7 @@ namespace The203.CollectionJson.Test
         [TestMethod]
         public void EnsureAddSiblingOverloadWorks()
         {
-            LinkBuilder<Room> builder = new LinkBuilder<Room>(defaultCollectionJsonLinker.InternalMappings);
+            LinkBuilder<Room> builder = new LinkBuilder<Room>(defaultRouteBuilder);
 
             var result = builder
                 .IsParent()
@@ -301,14 +303,14 @@ namespace The203.CollectionJson.Test
         [TestMethod]
         public void SeeWhatCalculatePrependUrlDoes()
         {
-            var mappings = defaultCollectionJsonLinker.InternalMappings;
-            string searchedRouteTemplate = mappings[mappings[typeof (Room)].Parent].RouteTemplate;
-            LinkBuilder<Room> builder = new LinkBuilder<Room>(mappings);
+            var mappings = defaultRouteBuilder;
+            string searchedRouteTemplate = defaultRouteBuilder.GetRoutes(typeof(House))[typeof(Room)].RouteTemplate;
+            LinkBuilder<Room> builder = new LinkBuilder<Room>(defaultRouteBuilder);
 
             string randomUrl = @"https://plus.google.com/hangouts/_/7941eba9551c7d3090763b7d978950594a230209#/";
             string urlWithTemplateStuckInIt = randomUrl + searchedRouteTemplate + "/asdfaksdafsdfasdf";
 
-            var result = builder.CalculatePrependUrl(urlWithTemplateStuckInIt);
+            var result = builder.CalculatePrependUrl<House>(urlWithTemplateStuckInIt);
             result = result.AddParent("Guide", sampleHouse);
 
             List<ILink> links = new List<ILink>();
@@ -329,8 +331,8 @@ namespace The203.CollectionJson.Test
         [TestMethod]
         public void VerifyAddParentWithDelegateProducesExpectedLink()
         {
-            var mappings = defaultCollectionJsonLinker.InternalMappings;
-            LinkBuilder<Room> builder = new LinkBuilder<Room>(defaultCollectionJsonLinker.InternalMappings);
+            var mappings = defaultRouteBuilder;
+            LinkBuilder<Room> builder = new LinkBuilder<Room>(defaultRouteBuilder);
 
             var result = builder
                 .AddSibling<Room>("Next", room1.Id)
@@ -350,8 +352,8 @@ namespace The203.CollectionJson.Test
         [TestMethod]
         public void VerifyAddSiblingWithDelegateProducesExpectedLink()
         {
-            var mappings = defaultCollectionJsonLinker.InternalMappings;
-            LinkBuilder<Room> builder = new LinkBuilder<Room>(defaultCollectionJsonLinker.InternalMappings);
+            var mappings = defaultRouteBuilder;
+            LinkBuilder<Room> builder = new LinkBuilder<Room>(defaultRouteBuilder);
 
             var result = builder
                 .AddSibling<Room>("Next", room1.Id)

@@ -2,6 +2,7 @@
 using System.Web.Routing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using The203.CollectionJson.Core;
+using The203.CollectionJson.Mvc;
 using The203.CollectionJson.Test.Domain;
 
 namespace The203.CollectionJson.Test
@@ -13,13 +14,13 @@ namespace The203.CollectionJson.Test
         public void EnsureCollectionJsonRoomDimensionIsBuildingDataCorrectly()
         {
             RouteCollection routes = new RouteCollection();
-            CollectionJsonLinker cjLinker = new CollectionJsonLinker();
-            cjLinker.StartPrimaryRoute()
+            RouteBuilder cjLinker = new RouteBuilder();
+            cjLinker.StartPrimaryRoute<House>()
                     .AddItemAndCollection<House>("Houses/{houseId}", sg => sg.HouseId)
                     .AddItemAndCollection<House, Room>("Rooms/{roomId}", ai => ai.Id)
                     .AddItemAndCollection<Room, Furniture>("Furniture/{furnitureId}", ans => ans.Id.ToString())
                     .AddItemAndCollection<Room, RoomDimension>("RoomDimension", r => "")
-                    .MapRoutes(routes);
+                    .MapRoutes(new RouteCreation(), routes);
 
             var roomTitle = "good room.";
             var domain = new Room(roomTitle);
@@ -40,13 +41,13 @@ namespace The203.CollectionJson.Test
         public void VerifyAddTemplateSetsTemplate()
         {
             RouteCollection routes = new RouteCollection();
-            CollectionJsonLinker cjLinker = new CollectionJsonLinker();
-            cjLinker.StartPrimaryRoute()
+            RouteBuilder cjLinker = new RouteBuilder();
+            cjLinker.StartPrimaryRoute<House>()
                     .AddItemAndCollection<House>("Houses/{houseId}", sg => sg.HouseId)
                     .AddItemAndCollection<House, Room>("Rooms/{roomId}", ai => ai.Id)
                     .AddItemAndCollection<Room, Furniture>("Furniture/{furnitureId}", ans => ans.Id.ToString())
                     .AddItemAndCollection<Room, RoomDimension>("RoomDimension", r => "")
-                    .MapRoutes(routes);
+                    .MapRoutes(new RouteCreation(), routes);
 
             var expectedMarkup = "good room.";
             var domain = new Room(expectedMarkup);

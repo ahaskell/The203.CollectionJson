@@ -38,7 +38,7 @@ namespace The203.CollectionJson.Test
             items.Add(room1);
             items.Add(room2);
 
-            CJ<Room> cjRoomDimension = new CJ<Room>(items, defaultCollectionJsonLinker, "");
+            CJ<Room> cjRoomDimension = new CJ<Room>(items, defaultRouteBuilder, "");
             cjRoomDimension.BuildLinks()
                     .AddParent<House>("House", sampleHouse)
                     .AddChildCollection<Furniture>("Furniture", d => d.Furniture)
@@ -52,7 +52,7 @@ namespace The203.CollectionJson.Test
         [TestMethod]
         public void EnsureCollectionJsonRoomDimensionMakesValidCollectionJson()
         {
-            CJ<Room> cjRoomDimension = new CJ<Room>(room3, defaultCollectionJsonLinker, "");
+            CJ<Room> cjRoomDimension = new CJ<Room>(room3, defaultRouteBuilder, "");
             cjRoomDimension.BuildLinks()
                     .AddParent<House>("House", sampleHouse)
                     .AddChildCollection<Furniture>("Furniture", d => d.Furniture)

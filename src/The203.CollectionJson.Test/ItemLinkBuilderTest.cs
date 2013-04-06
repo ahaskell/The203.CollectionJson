@@ -25,7 +25,7 @@ namespace The203.CollectionJson.Test
                                         {
                                             {LinkBuilderUrlType.Parent, "FIND_ME_LATER"}
                                         }
-                                    , defaultCollectionJsonLinker.InternalMappings, linkList);
+                                    , defaultRouteBuilder.GetRoutes(typeof(House)), linkList);
 
             Assert.IsTrue(linkList[0].href.StartsWith("FIND_ME_LATER"));
         }
@@ -47,7 +47,7 @@ namespace The203.CollectionJson.Test
                                             {LinkBuilderUrlType.None, "IF_YOU_FIND_THIS_WE_FAIL"},
                                             {LinkBuilderUrlType.Parent, "DONT_FIND_THIS_EITHER"}
                                         }
-                                    , defaultCollectionJsonLinker.InternalMappings, linkList);
+                                    , defaultRouteBuilder.GetRoutes(typeof(House)), linkList);
 
             Assert.IsFalse(linkList[0].href.Contains("IF_YOU_FIND_THIS_WE_FAIL"));
             Assert.IsFalse(linkList[0].href.Contains("DONT_FIND_THIS_EITHER"));
@@ -68,7 +68,7 @@ namespace The203.CollectionJson.Test
                                         {
                                             {LinkBuilderUrlType.None, "IF_YOU_FIND_THIS_WE_FAIL"}
                                         }
-                                    , defaultCollectionJsonLinker.InternalMappings, linkList);
+                                    , defaultRouteBuilder.GetRoutes(typeof(House)), linkList);
         }
 
         [TestMethod]
@@ -86,7 +86,7 @@ namespace The203.CollectionJson.Test
                                         {
                                             {LinkBuilderUrlType.Parent, "usless since it will be null"}
                                         }
-                                    , defaultCollectionJsonLinker.InternalMappings, linkList);
+                                    , defaultRouteBuilder.GetRoutes(typeof(House)), linkList);
 
             Assert.AreEqual(0, linkList.Count);
         }
@@ -96,7 +96,7 @@ namespace The203.CollectionJson.Test
         {
             List<ILink> linkList = new List<ILink>();
             room1.RoomDimension = new RoomDimension() {AnswerId = "567", Confidence = 10, Score = 0};
-            defaultCollectionJsonLinker.InternalMappings.Remove(typeof (RoomDimension));
+            defaultRouteBuilder.GetRoutes(typeof(House)).Remove(typeof (RoomDimension));
             ILinkBuilderItem<Room> itemLinkBuilder = new ItemLinkBuilderItem<Room, RoomDimension>("test",
                                                                                                   ai => ai.RoomDimension,
                                                                                                   LinkBuilderUrlType
@@ -107,7 +107,7 @@ namespace The203.CollectionJson.Test
                                         {
                                             {LinkBuilderUrlType.Parent, "exactly what the url will be"}
                                         }
-                                    , defaultCollectionJsonLinker.InternalMappings, linkList);
+                                    , defaultRouteBuilder.GetRoutes(typeof(House)), linkList);
 
             Assert.AreEqual("exactly what the url will be", linkList[0].href);
         }
@@ -125,7 +125,7 @@ namespace The203.CollectionJson.Test
                                         {
                                             {LinkBuilderUrlType.Parent, "http://www.outthere.com"}
                                         }
-                                    , defaultCollectionJsonLinker.InternalMappings, linkList);
+                                    , defaultRouteBuilder.GetRoutes(typeof(House)), linkList);
 
             Assert.AreEqual("http://www.outthere.com/RoomDimension", linkList[0].href);
         }

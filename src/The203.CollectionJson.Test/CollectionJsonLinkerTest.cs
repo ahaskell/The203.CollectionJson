@@ -2,6 +2,7 @@
 using System.Web.Routing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using The203.CollectionJson.Core;
+using The203.CollectionJson.Mvc;
 using The203.CollectionJson.Test.Domain;
 
 namespace The203.CollectionJson.Test
@@ -13,12 +14,11 @@ namespace The203.CollectionJson.Test
         public void EnsureItemOnlyRouteCanBeAdded()
         {
             var routes = new RouteCollection();
-            var cjLinker = new CollectionJsonLinker();
-            cjLinker.StartPrimaryRoute();
-            cjLinker.AddItemAndCollection<Room>("Rooms/{assessmentItemId}", ai => ai.Id);
-            cjLinker.AddEmbeddedItem<Room, RoomDimension>("RoomDimension");
+            var cjLinker = new CollectionJsonLinker()
+                .AddItemAndCollection<Room>("Rooms/{assessmentItemId}", ai => ai.Id)
+                .AddEmbeddedItem<Room, RoomDimension>("RoomDimension");
 
-            cjLinker.MapRoutes(routes);
+            cjLinker.MapRoutes(new RouteCreation(), routes);
 
             Assert.IsNotNull(((System.Web.Routing.Route) routes[0]).Url);
             Assert.AreEqual("Rooms/{assessmentItemId}/RoomDimension", ((System.Web.Routing.Route) routes[2]).Url);
@@ -30,12 +30,11 @@ namespace The203.CollectionJson.Test
         public void EnsureCollectionOnlyRouteCanBeAdded()
         {
             var routes = new RouteCollection();
-            var cjLinker = new CollectionJsonLinker();
-            cjLinker.StartAlternateRoute();
-            cjLinker.AddItemAndCollection<House>("Houses/{houseId}", ai => ai.HouseId);
-            cjLinker.AddEmbeddedCollection<House, House>("RelatedStudyGuides");
+            var cjLinker = new CollectionJsonLinker()
+            .AddItemAndCollection<House>("Houses/{houseId}", ai => ai.HouseId)
+            .AddEmbeddedCollection<House, House>("RelatedStudyGuides");
 
-            cjLinker.MapRoutes(routes);
+            cjLinker.MapRoutes(new RouteCreation(), routes);
 
             Assert.IsNotNull(((System.Web.Routing.Route) routes[0]).Url);
             Assert.AreEqual("Houses/{houseId}/RelatedStudyGuides", ((System.Web.Routing.Route) routes[2]).Url);
@@ -55,10 +54,9 @@ namespace The203.CollectionJson.Test
             var routes = new RouteCollection();
 
             var cjLinker = new CollectionJsonLinker();
-            cjLinker.StartPrimaryRoute();
             cjLinker.AddItemAndCollection<House>("Houses/{houseId}", sg => sg.HouseId);
             cjLinker.AddItemAndCollection<House, Room>("Rooms/{roomId}", ai => ai.Id);
-            cjLinker.MapRoutes(routes);
+            cjLinker.MapRoutes(new RouteCreation(), routes);
 
             Assert.IsNotNull(((System.Web.Routing.Route) routes[0]).Url);
             Assert.AreEqual("Houses/{houseId}", ((System.Web.Routing.Route) routes[0]).Url);
@@ -72,27 +70,7 @@ namespace The203.CollectionJson.Test
             Assert.AreEqual("Rooms", ((System.Web.Routing.Route) routes[2]).Defaults["controller"]);
         }
 
-        [TestMethod]
-        [ExpectedException(typeof (InvalidOperationException))]
-        public void ThrowExceptionOnStartPrimaryWhenPreviousRouteBuildingNotTerminated()
-        {
-            CollectionJsonLinker cjLinker = new CollectionJsonLinker();
-            cjLinker.StartPrimaryRoute();
-            cjLinker.AddItemAndCollection<Room>("Rooms/{roomId}", ai => ai.Id);
-
-            cjLinker.StartPrimaryRoute();
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof (InvalidOperationException))]
-        public void ThrowExceptionOnStartAlternateWhenPreviousRouteBuildingNotTerminated()
-        {
-            CollectionJsonLinker cjLinker = new CollectionJsonLinker();
-            cjLinker.StartPrimaryRoute();
-            cjLinker.AddItemAndCollection<Room>("Rooms/{roomId}", ai => ai.Id);
-
-            cjLinker.StartAlternateRoute();
-        }
+        
 
         [TestMethod]
         [ExpectedException(typeof (InvalidOperationException))]
@@ -132,41 +110,7 @@ namespace The203.CollectionJson.Test
         {
             RouteCollection routes = new RouteCollection();
             CollectionJsonLinker cjLinker = new CollectionJsonLinker();
-            cjLinker.MapRoutes(routes);
-        }
-
-        [TestMethod]
-        public void StartAlternateRouteCausesRoutingsToGoIntoAlternateMappings()
-        {
-            CollectionJsonLinker cjLinker = new CollectionJsonLinker();
-            cjLinker.StartAlternateRoute()
-                    .AddItemAndCollection<Room>("sss", ai => ai.Id)
-                    .AddItemAndCollection<House>("ddd", sg => sg.HouseId)
-                    .AddEmbeddedItem<Room, RoomDimension>("eee");
-
-            Assert.AreNotEqual(0, cjLinker.AlternateMappings.Count);
-            Assert.AreEqual(0, cjLinker.InternalMappings.Count);
-
-            RouteCollection routes = new RouteCollection();
-            cjLinker.MapRoutes(routes);
-            Assert.AreEqual(5, routes.Count);
-        }
-
-        [TestMethod]
-        public void StartPrimaryRouteCausesRoutesToGoIntoInternalMappings()
-        {
-            CollectionJsonLinker cjLinker = new CollectionJsonLinker();
-            cjLinker.StartPrimaryRoute()
-                    .AddItemAndCollection<Room>("sss", ai => ai.Id)
-                    .AddItemAndCollection<House>("ddd", sg => sg.HouseId)
-                    .AddEmbeddedItem<Room, RoomDimension>("eee");
-
-            Assert.AreNotEqual(0, cjLinker.InternalMappings.Count);
-            Assert.AreEqual(0, cjLinker.AlternateMappings.Count);
-
-            RouteCollection routes = new RouteCollection();
-            cjLinker.MapRoutes(routes);
-            Assert.AreEqual(5, routes.Count);
+            cjLinker.MapRoutes(new RouteCreation(), routes);
         }
     }
 }

@@ -13,7 +13,7 @@ namespace The203.CollectionJson.Test
         {
             var targetObject = room1;
             var cjLinker = defaultCollectionJsonLinker;
-            CJ<Room> result = new CJ<Room>(targetObject, cjLinker, "/Houses/123/Rooms");
+            CJ<Room> result = new CJ<Room>(targetObject, defaultRouteBuilder, "/Houses/123/Rooms");
             result.AddTemplate();
             result.BuildLinks().AddParent<House>("parent", sampleHouse);
 
@@ -26,8 +26,7 @@ namespace The203.CollectionJson.Test
         public void VerifyExtraPropertyOnTemplateCausesException()
         {
             var targetObject = room1;
-            var cjLinker = CollectionJsonLinker.Instance;
-            CJ<Room> result = new CJ<Room>(targetObject, cjLinker, "");
+            CJ<Room> result = new CJ<Room>(targetObject, defaultRouteBuilder, "");
             result.BuildLinks().IsParent();
 
 
@@ -38,8 +37,7 @@ namespace The203.CollectionJson.Test
         public void VerifyExposeToClientCausesPropertiesToBeSkipped()
         {
             var targetObject = room1;
-            var cjLinker = CollectionJsonLinker.Instance;
-            CJ<Room> result = new CJ<Room>(targetObject, cjLinker, "");
+            CJ<Room> result = new CJ<Room>(targetObject, defaultRouteBuilder, "");
             result.BuildLinks().IsParent();
 
             string[] hiddenFields = new string[] {"RawQtiData", "QtiIdent", "QtiAssessmentId"};
@@ -50,7 +48,7 @@ namespace The203.CollectionJson.Test
 
             Assert.IsFalse(container.collection.items.Any(i => i.data.Any(d => hiddenFields.Contains(d.name))));
 
-            CJ<Furniture> responseRoomDimension = new CJ<Furniture>(room1.Furniture.First(), cjLinker, "");
+            CJ<Furniture> responseRoomDimension = new CJ<Furniture>(room1.Furniture.First(), defaultRouteBuilder, "");
             responseRoomDimension.BuildLinks().AddParent("parent", room1);
 
             hiddenFields = new string[] {"QtiIdentifier"};
