@@ -11,11 +11,11 @@ namespace The203.CollectionJson.Test.Domain
 
         public House(string houseName)
         {
-            HouseId = houseName;
+            Id = houseName;
             Rooms = new List<Room>();
         }
 
-        public string HouseId { get; set; }
+        public string Id { get; set; }
 
         public Yard Yard { get; set; }
 

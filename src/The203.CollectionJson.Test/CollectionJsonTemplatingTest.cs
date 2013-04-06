@@ -59,7 +59,7 @@ namespace The203.CollectionJson.Test
         {
             CollectionJsonTemplating<Room> template = new CollectionJsonTemplating<Room>();
             var actual = template.GenerateTemplate();
-            string[] visibleFields = new string[] {"Id", "Title", "ClientShallntSeeThis", "RoomDimension", "RoomId", "RoomDimension"};
+            string[] visibleFields = new string[] {"Id", "Title", "ClientShallntSeeThis", "RoomDimension", "Id", "RoomDimension"};
 
             foreach (Data d in actual.data)
                 Assert.IsTrue(visibleFields.Contains(d.name));

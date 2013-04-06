@@ -176,13 +176,13 @@ namespace The203.CollectionJson.Test
             LinkBuilder<Room> builder = new LinkBuilder<Room>(defaultRouteBuilder);
 
             // AddParent is supposed to return the ref to builder.  
-            var result = builder.AddParent<House>("Test", sampleHouse.HouseId);
+            var result = builder.AddParent<House>("Test", sampleHouse.Id);
             Assert.AreSame(builder, result);
 
             List<ILink> targets = new List<ILink>();
             builder.PopulateLinks(room3, targets);
             Assert.AreEqual("Test", targets.First().rel);
-            Assert.AreEqual("/Houses/" + sampleHouse.HouseId, targets.First().href);
+            Assert.AreEqual("/Houses/" + sampleHouse.Id, targets.First().href);
         }
         [TestMethod]
         public void SomeOtherTestNameThis()
@@ -191,14 +191,14 @@ namespace The203.CollectionJson.Test
 
             Furniture result2 = new Furniture() { Id = "AA" };
             Furniture result3 = new Furniture() { Id = "XX" };
-            builder2.CalculatePrependUrl<House>(defaultHouseUrl + "/123/Rooms/1")
+            builder2.CalculatePrependUrl<House>(sampleHouseUrl + "/123/Rooms/1")
                 .AddParent<Room>("parent", "1")
             .AddSibling<Furniture>("Sibling", result2);
 
             var targets = new List<ILink>();
             builder2.PopulateLinks(result3, targets);
             Assert.AreEqual("Sibling", targets.Last().rel);
-            Assert.AreEqual(defaultHouseUrl + "/123/Rooms/1/Furniture/" + result2.Id, targets.Last().href);
+            Assert.AreEqual(sampleHouseUrl + "/123/Rooms/1/Furniture/" + result2.Id, targets.Last().href);
         }
 
         [TestMethod]
@@ -282,7 +282,7 @@ namespace The203.CollectionJson.Test
             builder.PopulateLinks(room3, targets);
             Assert.AreEqual(1, targets.Count);
             Assert.AreEqual("parent", targets[0].rel);
-            Assert.AreEqual("/Houses/" + sampleHouse.HouseId, targets[0].href);
+            Assert.AreEqual("/Houses/" + sampleHouse.Id, targets[0].href);
         }
 
 

@@ -22,7 +22,6 @@ namespace The203.CollectionJson.Test.Domain
         [HideFromClient]
         public string ClientShallntSeeThis { get; set; }
 
-        public string RoomId { get; set; }
         internal RoomDimension RoomDimension { get; set; }
 
         public IList<Furniture> Furniture { get; private set; }

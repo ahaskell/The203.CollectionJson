@@ -35,7 +35,7 @@ namespace The203.CollectionJson.Test
             var routes = new RouteCollection();
 
             var cjLinker = new CollectionJsonLinker();
-            cjLinker.AddItemAndCollection<House>("Houses/{houseId}", sg => sg.HouseId);
+            cjLinker.AddItemAndCollection<House>("Houses/{houseId}", sg => sg.Id);
             cjLinker.AddItemAndCollection<House, Room>("Rooms/{roomId}", ai => ai.Id);
             cjLinker.MapRoutes(new RouteCreation(), routes);
 

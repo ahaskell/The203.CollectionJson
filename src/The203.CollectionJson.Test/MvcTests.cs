@@ -24,7 +24,7 @@ namespace The203.CollectionJson.Test
             mockHttpContext.Setup(c => c.Request).Returns(request.Object);
 
             string studyGuideId = Guid.NewGuid().ToString(); // ?? 
-            string assessmentItemId = room1.RoomId;
+            string assessmentItemId = room1.Id;
 
 
             var service = new Mock<IHouseService>();

@@ -16,7 +16,7 @@ namespace The203.CollectionJson.Test
             RouteCollection routes = new RouteCollection();
             RouteBuilder cjLinker = new RouteBuilder();
             cjLinker.StartPrimaryRoute<House>()
-                    .AddItemAndCollection<House>("Houses/{houseId}", sg => sg.HouseId)
+                    .AddItemAndCollection<House>("Houses/{houseId}", sg => sg.Id)
                     .AddItemAndCollection<House, Room>("Rooms/{roomId}", ai => ai.Id)
                     .AddItemAndCollection<Room, Furniture>("Furniture/{furnitureId}", ans => ans.Id.ToString())
                     .AddItemAndCollection<Room, RoomDimension>("RoomDimension", r => "")
@@ -43,7 +43,7 @@ namespace The203.CollectionJson.Test
             RouteCollection routes = new RouteCollection();
             RouteBuilder cjLinker = new RouteBuilder();
             cjLinker.StartPrimaryRoute<House>()
-                    .AddItemAndCollection<House>("Houses/{houseId}", sg => sg.HouseId)
+                    .AddItemAndCollection<House>("Houses/{houseId}", sg => sg.Id)
                     .AddItemAndCollection<House, Room>("Rooms/{roomId}", ai => ai.Id)
                     .AddItemAndCollection<Room, Furniture>("Furniture/{furnitureId}", ans => ans.Id.ToString())
                     .AddItemAndCollection<Room, RoomDimension>("RoomDimension", r => "")

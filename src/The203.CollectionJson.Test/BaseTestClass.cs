@@ -23,7 +23,7 @@ namespace The203.CollectionJson.Test
         protected Painting painting1;
         protected Painting painting2;
         protected RouteBuilder defaultRouteBuilder;
-        protected String defaultHouseUrl = "http://www.the203.info/Houses/";
+        protected String sampleHouseUrl = "http://www.the203.info/Houses/";
         [TestInitialize]
         public void Setup()
         {
@@ -31,7 +31,7 @@ namespace The203.CollectionJson.Test
             defaultRouteBuilder = new RouteBuilder();
             defaultCollectionJsonLinker = defaultRouteBuilder.StartPrimaryRoute<House>();
             defaultCollectionJsonLinker
-                                       .AddItemAndCollection<House>("Houses/{houseId}", sg => sg.HouseId)
+                                       .AddItemAndCollection<House>("Houses/{houseId}", sg => sg.Id)
                                        .AddItemAndCollection<House, Room>("Rooms/{roomId}", ai => ai.Id)
                                        .AddItemAndCollection<Room, Furniture>("Furniture/{furnitureId}",
                                                                               ans => ans.Id.ToString())
