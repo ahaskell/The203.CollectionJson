@@ -8,6 +8,7 @@ namespace The203.CollectionJson.Core.Links
     public abstract class LinkBuilderItem<TItem, TRelated> : ILinkBuilderItem<TItem>
     {
 	   protected LinkBuilderUrlType prependUrlKey;
+	   protected bool ignoreNullIfPossible;
 
 	   public Type LinkFor { get; private set; }
 	   public LinkBuilderItem()
@@ -15,6 +16,11 @@ namespace The203.CollectionJson.Core.Links
 		  this.LinkFor = typeof(TRelated);
 	   }
 
+	   public ILinkBuilderItem<TItem> Always()
+	   {
+		  this.ignoreNullIfPossible = true;
+		  return this;
+	   }
 	   protected virtual string GetPrependUrl(IDictionary<LinkBuilderUrlType, string> urlMap)
 	   {
 		  if (this.prependUrlKey == LinkBuilderUrlType.None)

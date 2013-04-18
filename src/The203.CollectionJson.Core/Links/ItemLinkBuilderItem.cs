@@ -12,7 +12,6 @@ namespace The203.CollectionJson.Core.Links
 	   protected string rel;
 	   protected Func<TItem, TRelated> resolver;
 	   protected IEnumerable<Func<TRelated, string>> propertyResolution;
-	   private bool ignoreNullIfPossible = false;
 	   private string tackOnUrl;
 
 
@@ -62,10 +61,6 @@ namespace The203.CollectionJson.Core.Links
 		  return null;
 	   }
 
-	   public ILinkBuilderItem<TItem> Always()
-	   {
-		  this.ignoreNullIfPossible = true;
-		  return this;
-	   }
+	  
     }
 }

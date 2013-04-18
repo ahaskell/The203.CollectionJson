@@ -21,7 +21,7 @@ namespace The203.CollectionJson.Core.Links
 	   public override void Resolve(TItem baseObject, IDictionary<LinkBuilderUrlType, string> urlMap, IDictionary<Type, IRouteMapping> mappings, IList<ILink> links)
 	   {
 		  IEnumerable<TRelated> targetObject = resolver(baseObject);
-		  if (targetObject != null && targetObject.Count() > 0)
+		  if (targetObject != null && targetObject.Count() > 0 || ignoreNullIfPossible)
 		  {
 			 var url = CombinePath(GetPrependUrl(urlMap), CreateCollectionLink(mappings));
 			 links.Add(new Link(this.rel, url));

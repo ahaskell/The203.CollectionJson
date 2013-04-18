@@ -4,8 +4,9 @@ namespace The203.CollectionJson.Core
 {
     public interface ICJ
     {
-        void AddTemplate();
-        ICollectionContainer Container { get; set; }
-        string GenerateJson();
+	   void AddTemplate();
+	   void AddTemplate<TT>();
+	   ICollectionContainer Container { get; set; }
+	   string GenerateJson();
     }
 }

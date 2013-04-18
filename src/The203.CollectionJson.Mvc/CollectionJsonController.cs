@@ -9,22 +9,29 @@ using The203.CollectionJson.Core;
 
 namespace The203.CollectionJson.Mvc
 {
-   [ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     public abstract class CollectionJsonController : Controller
     {
+	   protected virtual T HydrateModel<T>() where T : class
+	   {
+		  T template = (T)Activator.CreateInstance(typeof(T));
+		  HydrateModel<T>(template);
+		  return template;
+	   }
+
 	   protected virtual void HydrateModel<T>(T model) where T : class
 	   {
 		  var body = ExtractBody();
-		   ICollectionJsonTemplating<T> collectionTemplate = new CollectionJsonTemplating<T>();
+		  ICollectionJsonTemplating<T> collectionTemplate = new CollectionJsonTemplating<T>();
 		  collectionTemplate.HydrateInstance(body, model);
 	   }
 
 	   private string ExtractBody()
 	   {
-		   var reader = new System.IO.StreamReader(Request.InputStream);
-		   string body = reader.ReadToEnd();
-		   Request.InputStream.Position = 0;
-		   return body;
+		  var reader = new System.IO.StreamReader(Request.InputStream);
+		  string body = reader.ReadToEnd();
+		  Request.InputStream.Position = 0;
+		  return body;
 	   }
 
 	   protected void HydrateModel<T>(T model, NameValueCollection nameValueCollection) where T : class

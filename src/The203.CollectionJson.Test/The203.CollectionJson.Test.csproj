@@ -6,7 +6,7 @@
     <ProductVersion>
     </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{88B0FCF8-8431-476B-9D22-7035CD9181FD}</ProjectGuid>
+    <ProjectGuid>{BBF486E3-B5B9-46C8-B823-B20792C361A3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>The203.CollectionJson.Test</RootNamespace>

@@ -26,10 +26,14 @@ namespace The203.CollectionJson.Mvc
             return collectionJson.BuildLinks();
         }
 
-        public void AddTemplate()
-        {
-            collectionJson.AddTemplate();
-        }
+	   public void AddTemplate()
+	   {
+		  collectionJson.AddTemplate();
+	   }
+	   public void AddTemplate<TT>()
+	   {
+		  collectionJson.AddTemplate<TT>();
+	   }
         
         public override void ExecuteResult(ControllerContext context)
         {

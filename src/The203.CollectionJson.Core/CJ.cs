@@ -43,6 +43,10 @@ namespace The203.CollectionJson.Core
 		  : this(routeBuilder, collectionUrl)
 	   {
 		  this.targetObjects = targetCollection;
+		  if (this.targetObjects == null)
+		  {
+			  this.targetObjects = new List<T>();
+		  }
 	   }
 
 	   public ILinkBuilder<T> BuildLinks()
