@@ -31,15 +31,21 @@ namespace The203.CollectionJson.Core
 
 
 
-	   public ICollectionJsonRoute AddEmbeddedItem<TParent, TItem>(string route)
+	   public ICollectionJsonRoute AddItemOnly<TParent, TItem>(string route)
 	   {
 		  Func<TItem, String>[] blank = new Func<TItem, String>[] { a => "" };
 		  IRouteMapping mapping = new ItemMapping<TItem>(route, blank, GetControllerOfRoute(route), typeof(TParent));
 		  AddMapping(typeof(TItem), mapping);
 		  return this;
 	   }
+	   public ICollectionJsonRoute AddItemOnly<TItem>(String route)
+	   {
+		  IRouteMapping mapping = new ItemMapping<TItem>(route, new Func<TItem, String>[] { iterator => "" }, GetControllerOfRoute(route));
+		  AddMapping(typeof(TItem), mapping);
+		  return this;
+	   }
 
-	   public ICollectionJsonRoute AddEmbeddedCollection<TParent, TCollectionItem>(string route)
+	   public ICollectionJsonRoute AddCollectionOnly<TParent, TCollectionItem>(string route)
 	   {
 		  Func<TCollectionItem, String>[] blank = new Func<TCollectionItem, String>[] { a => "" };
 		  IRouteMapping mapping = new CollectionMapping<TCollectionItem>(route, blank, GetControllerOfRoute(route), typeof(TParent));
@@ -47,12 +53,20 @@ namespace The203.CollectionJson.Core
 		  return this;
 	   }
 
-	   public ICollectionJsonRoute AddFixedEndPoint<TItem>(String route)
+	   public ICollectionJsonRoute AddCollectionOnly<TItem>(String route)
 	   {
-		  IRouteMapping mapping = new ItemMapping<TItem>(route, new Func<TItem, String>[] { iterator => "" }, GetControllerOfRoute(route));
+		  return AddCollectionOnly<TItem>(null, route);
+	   }
+
+	   public ICollectionJsonRoute AddCollectionOnly<TItem>(Type controller, String route)
+	   {
+		  String controllerName = controller == null ? GetControllerOfRoute(route) : controller.Name;
+		  IRouteMapping mapping = new CollectionMapping<TItem>(route, new Func<TItem, String>[] { iterator => "" }, controllerName);
 		  AddMapping(typeof(TItem), mapping);
 		  return this;
 	   }
+
+	   
 
 	   public ICollectionJsonRoute AddItemAndCollection<TItem>(String route, params Func<TItem, String>[] identifier)
 	   {
@@ -65,6 +79,21 @@ namespace The203.CollectionJson.Core
 	   public ICollectionJsonRoute AddItemAndCollection<TParent, TItem>(string routeSegment, params Func<TItem, String>[] itemIdGetter)
 	   {
 		  IRouteMapping mapping = new CollectionItemMapping<TItem>(routeSegment, itemIdGetter, GetControllerOfRoute(routeSegment), typeof(TParent));
+		  AddMapping(typeof(TItem), mapping);
+		  return this;
+	   }
+
+	   public ICollectionJsonRoute AddItemAndCollection<TItem>(Type controller, String route, params Func<TItem, String>[] identifier)
+	   {
+		  IRouteMapping mapping = new CollectionItemMapping<TItem>(route, identifier, controller.Name);
+		  AddMapping(typeof(TItem), mapping);
+		  return this;
+	   }
+
+
+	   public ICollectionJsonRoute AddItemAndCollection<TParent, TItem>(Type controller, string routeSegment, params Func<TItem, String>[] itemIdGetter)
+	   {
+		  IRouteMapping mapping = new CollectionItemMapping<TItem>(routeSegment, itemIdGetter, controller.Name, typeof(TParent));
 		  AddMapping(typeof(TItem), mapping);
 		  return this;
 	   }

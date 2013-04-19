@@ -16,7 +16,7 @@ namespace The203.CollectionJson.Test
             var routes = new RouteCollection();
             var cjLinker = new CollectionJsonLinker()
                 .AddItemAndCollection<Room>("Rooms/{assessmentItemId}", ai => ai.Id)
-                .AddEmbeddedItem<Room, RoomDimension>("RoomDimension");
+                .AddItemOnly<Room, RoomDimension>("RoomDimension");
 
             cjLinker.MapRoutes(new RouteCreation(), routes);
 

@@ -35,7 +35,7 @@ namespace The203.CollectionJson.Test
                                        .AddItemAndCollection<House, Room>("Rooms/{roomId}", ai => ai.Id)
                                        .AddItemAndCollection<Room, Furniture>("Furniture/{furnitureId}",
                                                                               ans => ans.Id.ToString())
-                                       .AddEmbeddedItem<Room, RoomDimension>("RoomDimension")
+                                       .AddItemOnly<Room, RoomDimension>("RoomDimension")
                                        .MapRoutes <RouteCollection>(new RouteCreation(), routes);
 
 

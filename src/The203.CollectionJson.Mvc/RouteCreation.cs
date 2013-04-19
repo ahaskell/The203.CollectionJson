@@ -32,7 +32,7 @@ namespace The203.CollectionJson.Mvc
 
 			 if (route.Scope == RouteMappingScope.Item || route.Scope == RouteMappingScope.ItemAndCollection)
 			 {
-				routeCollection.MapRoute(routeName + ".Item", urlRoute, new { controller = route.Controller, action = "Item" });
+				routeCollection.MapRoute(routeName + ".Item", urlRoute, new { controller = route.Controller.Replace("Controller",""), action = "Item" });
 			 }
 			 if (route.Scope == RouteMappingScope.Collection || route.Scope == RouteMappingScope.ItemAndCollection)
 			 {
@@ -41,7 +41,7 @@ namespace The203.CollectionJson.Mvc
 				{
 				    urlRoute = match.Groups[1].Value;
 				}
-				routeCollection.MapRoute(routeName + ".Collection", urlRoute, new { controller = route.Controller, action = "Collection" });
+				routeCollection.MapRoute(routeName + ".Collection", urlRoute, new { controller = route.Controller.Replace("Controller", ""), action = "Collection" });
 			 }
 		  }
 	   }
