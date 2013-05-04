@@ -27,5 +27,8 @@ namespace The203.CollectionJson.Core.Links
 	   ILinkBuilder<TAnchor> PrependToUrl(string urlPart);
 	   ILinkBuilder<TAnchor> TryToCalculatePrependUrl<RootT>(string url);
 	   ILinkBuilder<TAnchor> CalculatePrependUrl<RootT>(string url);
+
+	   ILinkBuilder<TAnchor> SetSelf(string url);
+	    ILinkBuilder<TAnchor> SetSelf(Func<TAnchor, string> url);
     }
 }

@@ -26,8 +26,10 @@ namespace The203.CollectionJson.Core.Links
 	   private ILinkBuilderItem<TAnchor> parent;
 	   private ILink parentLink;
 	   private Type rootType;
+	    private string selfHref;
+	    private Func<TAnchor, string> selfProjection;
 
-	   public LinkBuilder(IRouteBuilder routeBuilder)
+	    public LinkBuilder(IRouteBuilder routeBuilder)
 	   {
 		  this.routeBuilder = routeBuilder;
 		  this.linkBuilders = new List<ILinkBuilderItem<TAnchor>>();
@@ -202,8 +204,16 @@ namespace The203.CollectionJson.Core.Links
 
 	   internal string GetSelf(TAnchor source)
 	   {
+		  if (!String.IsNullOrEmpty(this.selfHref))
+		  {
+			  return this.selfHref;
+		  }
+		 
+		  if (this.selfProjection != null)
+		  {
+			  return this.selfProjection(source);
+		  }
 		  ResolveParent(source);
-
 		  ItemLinkBuilderItem<TAnchor, TAnchor> self = new ItemLinkBuilderItem<TAnchor, TAnchor>("self", me => me, LinkBuilderUrlType.Parent);
 		  // ReSharper disable CompareNonConstrainedGenericWithNull
 		  if (source == null)
@@ -242,5 +252,16 @@ namespace The203.CollectionJson.Core.Links
 		  PrependToUrl(urlPrefix);
 		  return this;
 	   }
+
+	   public ILinkBuilder<TAnchor> SetSelf(Func<TAnchor, string> urlProj)
+	   {
+		   this.selfProjection = urlProj;
+		   return this;
+	   } 
+	   public ILinkBuilder<TAnchor> SetSelf(string url)
+	   {
+		   this.selfHref = url;
+		   return this;
+	   } 
     }
 }
