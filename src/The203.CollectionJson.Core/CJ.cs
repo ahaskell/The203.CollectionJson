@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Linq.Expressions;
 using System.Web.Script.Serialization;
 using System.Reflection;
 using The203.CollectionJson.Core.Model;
@@ -16,8 +16,9 @@ namespace The203.CollectionJson.Core
 	   protected LinkBuilder<T> linkBuilder;
 	   protected IRouteBuilder routeBuilder;
 	   protected string collectionUrl;
+	    private Dictionary<string, Func<T,object>> additionFields;
 
-	   public ICollectionContainer Container { get; set; }
+	    public ICollectionContainer Container { get; set; }
 
 
 	   protected CJ(IRouteBuilder routeBuilder, string collectionUrl)
@@ -26,6 +27,7 @@ namespace The203.CollectionJson.Core
 		  this.routeBuilder = routeBuilder;
 		  this.collectionUrl = collectionUrl;
 		  this.Container = new CollectionContainer();
+		   this.additionFields = new Dictionary<string, Func<T, object>>();
 	   }
 
 	   public CJ(T targetObject, IRouteBuilder routeBuilder, string collectionUrl)
@@ -54,7 +56,12 @@ namespace The203.CollectionJson.Core
 		  return this.linkBuilder;
 	   }
 
-	   private void PopulateData(IList<IData> data, T obj)
+	    public void AddFieldToData(Expression<Func<T, object>> field)
+	    {
+		   this.additionFields.Add(field.GetPropertyName(), field.Compile());
+	    }
+
+	    private void PopulateData(IList<IData> data, T obj)
 	   {
 		  //There is a possibility of nulls being passed in thanks to changes made elsewhere in linking. Thanks to Adam....
 		  if (obj == null)
@@ -70,6 +77,11 @@ namespace The203.CollectionJson.Core
 				data.Add(new Data(pi.Name, value.ToString().Replace("{", "&#123;")));
 			 }
 		  }
+		    foreach (var field in this.additionFields)
+		    {
+			   data.Add(new Data(field.Key, field.Value.Invoke(obj).ToString().Replace("{", "&#123;")));
+		    }
+		   
 	   }
 
 	   public virtual String GenerateJson()

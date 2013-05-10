@@ -13,4 +13,13 @@ namespace The203.CollectionJson.Core
     public class TemplateIgnoreAttribute : Attribute
     {
     }
+
+    /// <summary>
+    /// When used on a property that would otherwise not be sent to the client, this attribute causes the
+    /// CollectionJson framework to add the property to a template it.  
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
+    public class TemplateIncludeAttribute : Attribute
+    {
+    }
 }

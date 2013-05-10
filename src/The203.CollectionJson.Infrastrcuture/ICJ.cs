@@ -8,5 +8,6 @@ namespace The203.CollectionJson.Core
 	   void AddTemplate<TT>();
 	   ICollectionContainer Container { get; set; }
 	   string GenerateJson();
+	   ICollectionContainer CreateCollectionContainer();
     }
 }

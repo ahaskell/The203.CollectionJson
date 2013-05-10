@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
@@ -11,20 +12,21 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace The203.CollectionJson.Mvc
 {
-       [ExcludeFromCodeCoverage]
+    [ExcludeFromCodeCoverage]
     public class CollectionJsonResult<T> : ActionResult
     {
-        private ICJ<T> collectionJson;
+	   private ICJ<T> collectionJson;
+	   private bool newItemCreated;
 
-        public CollectionJsonResult(ICJ<T> collectionJson)
-        {
-            this.collectionJson = collectionJson;
-        }
+	   public CollectionJsonResult(ICJ<T> collectionJson)
+	   {
+		  this.collectionJson = collectionJson;
+	   }
 
-        public ILinkBuilder<T> BuildLinks()
-        {
-            return collectionJson.BuildLinks();
-        }
+	   public ILinkBuilder<T> BuildLinks()
+	   {
+		  return collectionJson.BuildLinks();
+	   }
 
 	   public void AddTemplate()
 	   {
@@ -34,18 +36,32 @@ namespace The203.CollectionJson.Mvc
 	   {
 		  collectionJson.AddTemplate<TT>();
 	   }
-        
-        public override void ExecuteResult(ControllerContext context)
-        {
-            if (context == null)
-            {
-                throw new ArgumentNullException("context");
-            }
+	   public void NewItemCreated()
+	   {
+		  this.newItemCreated = true;
+	   }
 
-            HttpResponseBase response = context.HttpContext.Response;
-            response.ContentType = "application/vnd.collection+json";
+	   public override void ExecuteResult(ControllerContext context)
+	   {
+		  if (context == null)
+		  {
+			 throw new ArgumentNullException("context");
+		  }
+		  HttpResponseBase response = context.HttpContext.Response;
+		  if (this.newItemCreated)
+		  {
 
-            response.Write(collectionJson.GenerateJson());
-        }
+			 response.RedirectLocation = collectionJson.CreateCollectionContainer().collection.items[0].href;
+			 response.StatusCode = 201;
+			 return;
+		  }
+		  response.ContentType = "application/vnd.collection+json";
+		  response.Write(collectionJson.GenerateJson());
+	   }
+
+	    public void IncludeField(Expression<Func<T, object>> field)
+	    {
+		    collectionJson.AddFieldToData(field);
+	    }
     }
 }
